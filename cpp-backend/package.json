@@ -1,0 +1,17 @@
+{
+  "name": "cpp-backend",
+  "version": "1.0.0",
+  "description": "The backend for the project using Napi",
+  "main": "index.js",
+  "scripts": {
+    "install": "cmake-js compile"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "cmake-js": "^7.3.0"
+  }
+}
