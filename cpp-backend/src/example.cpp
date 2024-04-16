@@ -1,6 +1,7 @@
 #include "example.h"
 using namespace std;
 int example::add(int x, int y){
+  //This is Justin POL
  return (x+y);
 }
 Napi::Number example::addWrapped(const Napi::CallbackInfo& info){
