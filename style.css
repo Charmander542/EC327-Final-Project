@@ -6,6 +6,7 @@ button {
 overflow: hidden;
 border: 1px solid #ccc;
 background-color: #f1f1f1;
+border-radius: 5px;
 }
 
 /* Style the buttons inside the tab */
@@ -18,6 +19,7 @@ cursor: pointer;
 padding: 14px 16px;
 transition: 0.3s;
 font-size: 17px;
+border-radius: 5px;
 }
 
 .right_align {
