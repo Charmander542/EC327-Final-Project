@@ -1,0 +1,21 @@
+Deliverables
+
+Brett
+Continue working on the frontend
+Implement all of the user input features
+Implement all of the display features
+
+David
+Will work on the Database Search and Generate Recipe Functions
+Bother Brett to make things work
+
+Avi
+Will work on class ingredients and adding to a CSV file (tab 1)
+Bother Brett to make things work
+
+Justin
+Will work on class Profile and adding to a CSV (tab 3)
+Bother Brett to make things work
+
+Charlie
+Debugger
