@@ -1,6 +1,7 @@
 #include "profile.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 //Constructor with arguments, saving the users and reading from the file "users.cpp"
