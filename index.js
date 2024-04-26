@@ -2,6 +2,7 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const { allowedNodeEnvironmentFlags } = require('process');
+const { ipcMain } = require('electron');
 
 function createWindow () {
   // Create the browser window.
@@ -55,3 +56,11 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+app.on('ready', createWindow);
+
+ipcMain.on('add-ingredient', (event, ingredient) => {
+  const ingredientCpp = require('./cpp-backend/src/ingredient.cpp'); // Load your C++ addon
+  const result = ingredientCpp.ingredient(ingredient.name, ingredient.quantity, ingredient.importance, ingredient.day, ingredient.month, ingredient.year); // Call the C++ function
+  event.sender.send('add-ingredient9-result', result); // Send result back to renderer process
+});

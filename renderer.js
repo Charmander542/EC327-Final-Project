@@ -5,14 +5,13 @@
 // selectively enable features needed in the rendering
 // process.
 
+
 // Example 1 - IPC
 document.getElementById('submit').addEventListener('click', function() {
    
     let input1 = document.getElementById("first_number").value;
     let input2 = document.getElementById("second_number").value;
-  
-    const {ipcRenderer} = require('electron')
-  
+    
     // send username to main.js 
     ipcRenderer.send('asynchronous-message', { 'input1':input1, 'input2':input2} );
   
@@ -52,4 +51,3 @@ document.getElementById('submit').addEventListener('click', function() {
   worker.onerror = function (event) {
       console.log(event.message, event);
   };
-  
