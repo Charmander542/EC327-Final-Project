@@ -135,3 +135,13 @@ profile loadLastProfile(){
     profile newProfile(storedName,storedNoNos);
     return newProfile;
 }
+
+Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1){
+    return Napi::String::New(napi_env env, const p1.name);
+}
+
+Napi::Object loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
+    
+}
+
+

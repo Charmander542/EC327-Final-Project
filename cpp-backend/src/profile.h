@@ -23,7 +23,6 @@ class profile {
 
 //loads last profile into an object 
 profile loadProfile(string name);
-Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info);
 //checks to see if loadProfile was successfull
 bool checkLoadProfile(string name);
 Napi::Boolean checkLoadProfileWrapped(const Napi::CallbackInfo& info);
@@ -31,6 +30,11 @@ Napi::Boolean checkLoadProfileWrapped(const Napi::CallbackInfo& info);
 void addProfile(string name, bool noNos[12]);
 //loads the last profile
 profile loadLastProfile();
+
+//returns the name as a javascript string
+Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1);
+//returns the bool array as a javascript array
+Napi::Object loadProfileNoNos(const Napi::CallbackInfo& info, profile p1);
 
 
 #endif
