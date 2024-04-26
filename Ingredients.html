@@ -9,11 +9,45 @@
     <title>Hungry Hippos!</title>
   </head>
   <body>
+    <div class="tab">
+      <a href="index.html"><button>Home</button></a>
+      <a href="Recipies.html"><button>Recipies</button></a>
+      <a href="Profile.html" class="right_align"><button>Profile</button></a>
+    </div>
     <h1>Ingredients!!</h1>
     <p>
-      <a href="index.html">Home!</a>
-      <a href="Recipies.html">Recipies!</a>
-      <a href="Profile.html">Profile!</a>
+      <h2>Add Ingredients:</h2>
+      <form>
+        <h3>Item</h3>
+        <input id="ingredient_name" type="text"></input>
+        <h3>Size</h3>
+        <input id="ingredient_size" type="number"></input>
+        <h3>Unit</h3>
+        <select name="ingredient_unit" id="unit">
+          <option value="count">ct</option>
+          <option value="grams">g</option>
+          <option value="ounces">oz</option>
+          <option value="pounds">lbs</option>
+          <option value="liters">L</option>
+          <option value="fluid ounces">fl oz</option>
+          <option value="cups">cups</option>
+          <option value="pints">pt</option>
+          <option value="quarts">qt</option>
+          <option value="gallons">gallons</option>
+        </select>
+        <h3>Quantity</h3>
+        <input id="ingredient_quantity" type="number"></input>
+        <h3>Expiration</h3>
+        <input id="ingredient_expiration" type="date"></input>  <!--convert to time since 1980?-->
+      </form>
+      <button id="ingredient_submit" type="submit">Enter</button>
+      <h1 id="tag_result"></h1>  
     </p>
+
+    <dl id="ingredients">
+    </dl>
+
+    <script type="module" src="./Ingredients.js"></script>
+
   </body>
 </html>

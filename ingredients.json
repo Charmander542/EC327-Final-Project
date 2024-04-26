@@ -1,0 +1,18 @@
+{
+    "ingredients": [
+        {
+            "name": "test_name",
+            "quantity":"qty",
+            "unit": "unit",
+            "date": "date"
+        },
+        {
+            "name": "test_name_2",
+            "quantity":"qty_2",
+            "unit": "unit_2",
+            "date": "date"
+        }
+
+    ]
+    
+}
