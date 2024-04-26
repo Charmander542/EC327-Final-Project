@@ -70,9 +70,9 @@ bool* profile::getNoNos(){
 
 
 //This returns the object of a new profile. It should be cachilling
-profile addProfile(string name, bool noNos[12]){
+void addProfile(string name, bool noNos[12]){
     profile newProfile(name,noNos);
-    return newProfile;
+    return;
 }
 
 //This loads the profile with the designated name
@@ -135,3 +135,21 @@ profile loadLastProfile(){
     profile newProfile(storedName,storedNoNos);
     return newProfile;
 }
+
+Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1){
+    Napi::Env env = info.Env();
+    return Napi::String::New(env, p1.name);
+}
+
+Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
+    Napi::Env env = info.Env();
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | (p1.noNos[i] << i); //todo CHARLIE CHECK THIS
+    }
+
+    return Napi::Number::New(env, (double)num);
+}
+
+
+

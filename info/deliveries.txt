@@ -19,3 +19,6 @@ Bother Brett to make things work
 
 Charlie
 Debugger
+
+https://github.com/nodejs/node-addon-api/blob/main/doc/README.md
+https://github.com/nodejs/node-addon-api/tree/main

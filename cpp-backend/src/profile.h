@@ -1,6 +1,7 @@
 #ifndef PROFILE
 #define PROFILE
 
+#include<napi.h>
 #include <string>
 using namespace std;
 
@@ -25,9 +26,18 @@ profile loadProfile(string name);
 //checks to see if loadProfile was successfull
 bool checkLoadProfile(string name);
 //adds a profile to the list of existing profiles
-profile addProfile(string name, bool noNos[12]);
+void addProfile(string name, bool noNos[12]);
 //loads the last profile
 profile loadLastProfile();
+
+//returns the name as a javascript string
+Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1);
+//returns the bool array as a javascript array
+Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info, profile p1);
+
+
+
+//Napi::Boolean checkLoadProfileWrapped(const Napi::CallbackInfo& info);
 
 
 #endif
