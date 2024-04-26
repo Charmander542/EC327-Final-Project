@@ -136,20 +136,54 @@ profile loadLastProfile(){
     return newProfile;
 }
 
-Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1){
+
+
+string loadProfileName(profile p1){
+    return p1.name;
+}
+
+Napi::Object loadLastProfileWrapped(){
+    
+    profile temp = loadLastProfile();
+
+    //run c++ function return value and return it in javascript
+    Napi::Object returnValue;
+    returnValue.Set(uint32_t(0),temp.name);
+    
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+    }
+    returnValue.Set(uint32_t(1),num);
+ 
+    return returnValue;
+}
+
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) 
+{
+  //export Napi function
+  exports.Set("loadLastProfile", Napi::Function::New(env, loadLastProfileWrapped));
+  //exports.Set("second", Napi::Function::New(env, example::addWrapped));
+  return exports;
+}
+
+
+
+/*Napi::String loadProfileName(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     return Napi::String::New(env, p1.name);
 }
 
-Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
+Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     int num;
     for(int i = 0; i < 12; i++){
-        num | (p1.noNos[i] << i); //todo CHARLIE CHECK THIS
+        num | ((short)p1.noNos[i] << i); //todo CHARLIE CHECK THIS
     }
 
     return Napi::Number::New(env, (double)num);
 }
-
+*/
 
 
