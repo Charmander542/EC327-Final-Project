@@ -1,19 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link rel="stylesheet" href="style.css"> </link>
-    <title>Hungry Hippos!</title>
-  </head>
-  <body>
-    <h1>Profile!</h1>
-    <div class="tab">
-      <a href="index.html">><button>Home</button></a>
-      <a href="Recipies.html">><button>Recipies</button></a>
-      <a href="Ingredients.html">><button>Ingredients</button></a>
+    <link rel="stylesheet" href="style.css">
+    <title>Profile - Hungry Hippos</title>
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html"><button>Home</button></a>
+        <a href="Recipes.html"><button>Recipes</button></a>
+        <a href="Ingredients.html"><button>Ingredients</button></a>
     </div>
-  </body>
+    <div class="profile-container">
+        <h1 class="profile-title">Profile</h1>
+        <form id="profileForm" class="profile-form">
+            <div class="input-group">
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div class="input-group">
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday">
+            </div>
+            <fieldset class="restrictions">
+                <legend>Food Restrictions (Select all that apply):</legend>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="nuts" name="restrictions" value="nuts">
+                    Nuts
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="gluten" name="restrictions" value="gluten">
+                    Gluten
+                </label>
+                <!-- More restrictions can be added here -->
+            </fieldset>
+            <button type="submit" class="submit-btn">Save Profile</button>
+        </form>
+    </div>
+</body>
 </html>

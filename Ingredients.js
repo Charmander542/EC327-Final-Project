@@ -2,20 +2,23 @@
 //const fs = require("fs");
 
 //expire();
-
-const { ipcRenderer } = require('electron');
-
 //get current ingredient information
 document.addEventListener('DOMContentLoaded', function () {
-  fetch('./ingredients.json')
-    .then(response => response.json())
+  fetch('/cpp-backend/src/ingredients.txt')
+    .then(response => response.text())
     .then(data => {
-      for (var i = 0; i < data.ingredients.length; i++) {
-        var item = data.ingredients[i];
-        var description = item.quantity + ' ' + item.unit;
+      const lines = data.split('\n');
+
+      // Loop through each line
+      lines.forEach(line => {
+        // Split the line into individual values
+        const [name, quantity, importance, day, month, year] = line.split(' ');
+
+        // Create description
+        const description = quantity + ' ' + importance;
         console.log(document.getElementById('ingredients'));
-        document.getElementById('ingredients').innerHTML += ('<dt>' + item.name + '</dt> <dd>' + description + '</dd>');
-      }
+        document.getElementById('ingredients').innerHTML += ('<dt>' + name + '</dt> <dd>' + description + '</dd>');
+      })
     })
 });
 
@@ -61,30 +64,30 @@ document.getElementById('ingredient_submit').addEventListener('click', function 
 // selectively enable features needed in the rendering
 // process.
 
-  // Wait for the DOM to finish loading
-  document.addEventListener('DOMContentLoaded', function () {
+// Wait for the DOM to finish loading
+document.addEventListener('DOMContentLoaded', function () {
 
-    // Access the submit button and add event listener
-    document.getElementById('ingredient_submit').addEventListener('click', function () {
-  
-      const ingredient = {
-        name: "Banana",
-        quantity: "99",
-        importance: "10",
-        day: 26,
-        month: 4,
-        year: 2024
-      };
+  // Access the submit button and add event listener
+  document.getElementById('ingredient_submit').addEventListener('click', function () {
 
-      console.log("Adding ingredient: " + ingredient)
+    const ingredient = {
+      name: "Banana",
+      quantity: "99",
+      importance: "10",
+      day: 26,
+      month: 4,
+      year: 2024
+    };
 
-      // send ingredient data to main.js 
-      ipcRenderer.send('add-ingredient', ingredient);
-  
-      // receive message from main.js
-      ipcRenderer.on('add-ingredient-result', (event, arg) => {
-        console.log(arg);
-      });
+    console.log("Adding ingredient: " + ingredient)
+
+    // send ingredient data to main.js 
+    ipcRenderer.send('add-ingredient', ingredient);
+
+    // receive message from main.js
+    ipcRenderer.on('add-ingredient-result', (event, arg) => {
+      console.log(arg);
     });
-  
   });
+
+});
