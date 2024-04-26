@@ -141,9 +141,15 @@ Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1){
     return Napi::String::New(env, p1.name);
 }
 
-Napi::Object loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
-    
+Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
+    Napi::Env env = info.Env();
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | (p1.noNos[i] << i); //todo CHARLIE CHECK THIS
+    }
+
+    return Napi::Number::New(env, (double)num);
 }
 
-num | (1 << i)
+
 
