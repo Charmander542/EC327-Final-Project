@@ -36,9 +36,9 @@ profile::profile(string name, bool noNos[12]){
     temp2.open("temp2.txt", ios::app);
 
     
-    while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
         if(name != storedName){
-                temp2 << storedName << " " << storedNoNos[1] << " " << storedNoNos[2] << " " << storedNoNos[3] << " " << storedNoNos[4] << " " << storedNoNos[5] << " " << storedNoNos[6] << " " << storedNoNos[7]<< " " << storedNoNos[8] << " " << storedNoNos[9] << " " << storedNoNos[10] << " " << storedNoNos[11] << endl;
+                temp2 << storedName << " " <<storedNoNos[0] << " " << storedNoNos[1] << " " << storedNoNos[2] << " " << storedNoNos[3] << " " << storedNoNos[4] << " " << storedNoNos[5] << " " << storedNoNos[6] << " " << storedNoNos[7]<< " " << storedNoNos[8] << " " << storedNoNos[9] << " " << storedNoNos[10] << " " << storedNoNos[11] << endl;
         }
     }
     
@@ -83,7 +83,7 @@ profile loadProfile(string name){
 
     input.open("users.txt");
     
-    while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
         if(name == storedName){
                 break;
         }
@@ -105,7 +105,7 @@ bool checkLoadProfile(string name){
 
     input.open("users.txt");
     
-    while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
         if(name == storedName){
             existed = true;
             break;
@@ -126,7 +126,7 @@ profile loadLastProfile(){
 
     input.open("users.txt");
     
-    while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
         
     }
     
