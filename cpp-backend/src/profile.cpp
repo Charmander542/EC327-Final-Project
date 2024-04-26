@@ -145,4 +145,5 @@ Napi::Object loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
     
 }
 
+num | (1 << i)
 
