@@ -2,10 +2,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 using namespace std;
 
 //Constructor with arguments, saving the users and reading from the file "users.cpp"
-profile::profile(string name, bool noNos[12]){
+profile::profile(string name, int noNo){
+
+    //turns the integer into the boolean equivalent
+    bool noNos[12];
+
+    for(int i = 0; i<12;i++){
+        noNos[i] = noNo%2;
+        noNo = noNo / 2;
+    }
 
     //Checks if user is already stored
     string storedName;
@@ -14,22 +23,6 @@ profile::profile(string name, bool noNos[12]){
     ifstream input;
 
     input.open("users.txt");
-
-    /* This Code checks if the user already exists, I dont think we need it but it's here just in case
-
-    bool exists;
-    if(input.fail()){
-        exists = false;
-    }
-    else{
-        exists = false;
-        while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
-            if(name == storedName && storedNoNos[0] == noNos[0] && storedNoNos[1] == noNos[1] && storedNoNos[2] == noNos[2] && storedNoNos[3] == noNos[3] && storedNoNos[4] == noNos[4] && storedNoNos[5] == noNos[5] && storedNoNos[6] == noNos[6] && storedNoNos[7] == noNos[7] && storedNoNos[8] == noNos[8] && storedNoNos[9] == noNos[9] && storedNoNos[10] == noNos[10] && storedNoNos[11] == noNos[11]){
-                exists = true;
-                break;
-            }
-        }
-    } */
     
     //Adds the user to the file/updates their profile
     ofstream temp2;
@@ -56,115 +49,182 @@ profile::profile(string name, bool noNos[12]){
     
 }
 
-/*This is our Destructor - Don't think we need it, but just in case we do I have it
-profile::~profile(){
-    delete[] noNos;
-
-}*/
-
-
 //This returns a pointer to the array, probably don't need it but it's here
 bool* profile::getNoNos(){
     return noNos;
 }
 
 
-//This returns the object of a new profile. It should be cachilling
-void addProfile(string name, bool noNos[12]){
-    profile newProfile(name,noNos);
-    return;
-}
 
-//This loads the profile with the designated name
-profile loadProfile(string name){
-    string storedName;
-    bool storedNoNos[12];
-    ifstream input;
-
-    input.open("users.txt");
-    
-    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
-        if(name == storedName){
-                break;
-        }
+//this function turns the boolean array into a integer
+int array2int(bool array[12]){
+    int sum = 0;
+    for(int i = 0; i<12; i++){
+        sum = sum + (short)array[i] * pow(i,2);
     }
-    
-    input.close();
-
-    profile newProfile(storedName,storedNoNos);
-    return newProfile;
-
+    return sum;
 }
 
-//checks if loadProfile with the name provided is accurate or not
-bool checkLoadProfile(string name){
-    string storedName;
-    bool storedNoNos[12];
-    ifstream input;
-    bool existed = false;
+//this function turns the array into a boolean integer
+bool* integer2array(int num){
+    bool array[12];
 
-    input.open("users.txt");
-    
-    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
-        if(name == storedName){
-            existed = true;
-            break;
-        }
+    for(int i = 0; i<12;i++){
+        array[i] = num%2;
+        num = num / 2;
     }
-    
-    input.close();
-
-    return existed;
+    return array;
 }
 
-//loads the last profile uploaded 
-profile loadLastProfile(){
-    string storedName;
-    bool storedNoNos[12];
-    ifstream input;
-    bool existed = false;
+//addProfile 
 
-    input.open("users.txt");
-    
-    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+    //This returns the object of a new profile.
+    void addProfile(string name, int noNo){
         
+        profile newProfile(name,noNo);
+        return;
     }
-    
-    input.close();
 
-    profile newProfile(storedName,storedNoNos);
-    return newProfile;
-}
+    Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        //check if arguments are integer only.
+        if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
+            Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
+        }
+        //convert javascripts datatype to c++
+        Napi::String first = info[0].As<Napi::String>();
+        Napi::Number second = info[1].As<Napi::Number>();
 
-
-
-string loadProfileName(profile p1){
-    return p1.name;
-}
-
-Napi::Object loadLastProfileWrapped(){
-    
-    profile temp = loadLastProfile();
-
-    //run c++ function return value and return it in javascript
-    Napi::Object returnValue;
-    returnValue.Set(uint32_t(0),temp.name);
-    
-    int num;
-    for(int i = 0; i < 12; i++){
-        num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+        addProfile(first.ToString(),second.Int32Value());
+        //run c++ function return value and return it in javascript
+        Napi::Boolean returnValue = Napi::Boolean::New(env, true);
     }
-    returnValue.Set(uint32_t(1),num);
- 
-    return returnValue;
-}
 
+//loadProfile
+
+    //This loads the profile with the designated name
+    profile loadProfile(string name){
+        string storedName;
+        bool storedNoNos[12];
+        ifstream input;
+
+        input.open("users.txt");
+        
+        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+            if(name == storedName){
+                    break;
+            }
+        }
+        
+        input.close();
+
+        int noNo = array2int(storedNoNos);
+
+        profile newProfile(storedName,noNo);
+        return newProfile;
+
+    }
+
+    //checks if loadProfile with the name provided is accurate or not
+    bool checkLoadProfile(string name){
+        string storedName;
+        bool storedNoNos[12];
+        ifstream input;
+        bool existed = false;
+
+        input.open("users.txt");
+        
+        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+            if(name == storedName){
+                existed = true;
+                break;
+            }
+        }
+        
+        input.close();
+
+        return existed;
+    }
+
+    //Wrapper for loadProfile
+    Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        //check if argument is a string
+        if(info.Length()<1 || !info[0].IsString()){
+            Napi::TypeError::New(env, "arg1::String expected").ThrowAsJavaScriptException();
+        }
+        
+        //turns into a javascript string
+        Napi::String first = info[0].As<Napi::String>();
+
+        //Error Checks ti make sure the profile exists
+        if(checkLoadProfile(first.ToString())){
+            Napi::TypeError::New(env, "Profile does not exist").ThrowAsJavaScriptException();
+        }
+        
+        //run c++ function
+        profile temp = loadProfile(first.ToString());
+        
+        //generates an integer that stored the list of booleans
+        int num;
+        for(int i = 0; i < 12; i++){
+            num | ((short)temp.noNos[i] << i); 
+        }
+
+        //Returns value to Javascript
+        Napi::Number returnValue = Napi::Number::New(env, num);
+        return returnValue;
+    }
+
+//loadLastProfile
+
+    //loads the last profile uploaded 
+    profile loadLastProfile(){
+        string storedName;
+        bool storedNoNos[12];
+        ifstream input;
+        bool existed = false;
+
+        input.open("users.txt");
+        
+        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+            
+        }
+        
+        input.close();
+
+        int noNo = array2int(storedNoNos);
+
+        profile newProfile(storedName,noNo);
+        return newProfile;
+    }
+
+    //Wrapper for loadLastProfile
+    Napi::Object loadLastProfileWrapped(){
+        
+        profile temp = loadLastProfile();
+
+        //run c++ function return value and return it in javascript
+        Napi::Object returnValue;
+        returnValue.Set(uint32_t(0),temp.name);
+        
+        int num;
+        for(int i = 0; i < 12; i++){
+            num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+        }
+        returnValue.Set(uint32_t(1),num);
+    
+        return returnValue;
+    }
+
+//NAPI requirements
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) 
 {
   //export Napi function
   exports.Set("loadLastProfile", Napi::Function::New(env, loadLastProfileWrapped));
-  //exports.Set("second", Napi::Function::New(env, example::addWrapped));
+  exports.Set("loadProfile", Napi::Function::New(env, loadProfileWrapped));
+  exports.Set("addProfile", Napi::Function::New(env, addProfileWrapped));
   return exports;
 }
 
@@ -186,4 +246,24 @@ Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info){
 }
 */
 
+/* This Code checks if the user already exists, I dont think we need it but it's here just in case
 
+    bool exists;
+    if(input.fail()){
+        exists = false;
+    }
+    else{
+        exists = false;
+        while(input >> storedName >> " " >> storedNoNos[0] >> " " >> storedNoNos[1] >> " " >> storedNoNos[2] >> " " >> storedNoNos[3] >> " " >> storedNoNos[4] >> " " >> storedNoNos[5] >> " " >> storedNoNos[6] >> " " >> storedNoNos[7] >> " " >> storedNoNos[8] >> " " >> storedNoNos[9] >> " " >> storedNoNos[10] >> " " >> storedNoNos[11]){
+            if(name == storedName && storedNoNos[0] == noNos[0] && storedNoNos[1] == noNos[1] && storedNoNos[2] == noNos[2] && storedNoNos[3] == noNos[3] && storedNoNos[4] == noNos[4] && storedNoNos[5] == noNos[5] && storedNoNos[6] == noNos[6] && storedNoNos[7] == noNos[7] && storedNoNos[8] == noNos[8] && storedNoNos[9] == noNos[9] && storedNoNos[10] == noNos[10] && storedNoNos[11] == noNos[11]){
+                exists = true;
+                break;
+            }
+        }
+    } */
+
+/*This is our Destructor - Don't think we need it, but just in case we do I have it
+profile::~profile(){
+    delete[] noNos;
+
+}*/

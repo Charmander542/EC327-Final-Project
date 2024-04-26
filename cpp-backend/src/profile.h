@@ -12,7 +12,7 @@ class profile {
         //Order of noNos: [Vegetarian, Vegan, Alcohol-Free, Gluten, Dairy, Eggs, Soy, Wheat, Fish, Shellfish, Tree Nuts, Peanuts]
         bool noNos[12];
         
-        profile(string name, bool noNos[12]);
+        profile(string name, int noNo);
         // ~profile(); don't think we need it, but we have it just in case
 
         bool* getNoNos();
@@ -21,15 +21,17 @@ class profile {
 };
 
 
+int array2int(bool array[12]);
+bool* integer2array(int num);
+
 //loads last profile into an object 
 profile loadProfile(string name);
-//todo add wrapper function and only return nonos
+Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info);
 //checks to see if loadProfile was successfull
 bool checkLoadProfile(string name);
-//todo call this one in loadProfile and throw an exception if ass
 //adds a profile to the list of existing profiles
 void addProfile(string name, bool noNos[12]);
-//todo add wrapper but it don't return shiiii
+Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info);
 //loads the last profile
 profile loadLastProfile();
 Napi::Object loadLastProfileWrapped();
