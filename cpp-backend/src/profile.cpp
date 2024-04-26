@@ -137,7 +137,8 @@ profile loadLastProfile(){
 }
 
 Napi::String loadProfileName(const Napi::CallbackInfo& info, profile p1){
-    return Napi::String::New(napi_env env, const p1.name);
+    Napi::Env env = info.Env();
+    return Napi::String::New(env, p1.name);
 }
 
 Napi::Object loadProfileNoNos(const Napi::CallbackInfo& info, profile p1){
