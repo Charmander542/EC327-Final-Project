@@ -70,9 +70,9 @@ bool* profile::getNoNos(){
 
 
 //This returns the object of a new profile. It should be cachilling
-profile addProfile(string name, bool noNos[12]){
+void addProfile(string name, bool noNos[12]){
     profile newProfile(name,noNos);
-    return newProfile;
+    return;
 }
 
 //This loads the profile with the designated name

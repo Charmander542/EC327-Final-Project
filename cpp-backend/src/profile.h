@@ -1,6 +1,7 @@
 #ifndef PROFILE
 #define PROFILE
 
+#include<napi.h>
 #include <string>
 using namespace std;
 
@@ -22,10 +23,12 @@ class profile {
 
 //loads last profile into an object 
 profile loadProfile(string name);
+Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info);
 //checks to see if loadProfile was successfull
 bool checkLoadProfile(string name);
+Napi::Boolean checkLoadProfileWrapped(const Napi::CallbackInfo& info);
 //adds a profile to the list of existing profiles
-profile addProfile(string name, bool noNos[12]);
+void addProfile(string name, bool noNos[12]);
 //loads the last profile
 profile loadLastProfile();
 

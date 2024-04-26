@@ -1,10 +1,11 @@
 #include <napi.h>
 #include <iostream>
+#include <string>
 #include <profile.h>
 using namespace std;
 
 //add number function
-int add(int x, int y);
+profile getProfile(string);
 //add function wrapper
 Napi::Number addWrapped(const Napi::CallbackInfo& info);
 //Export API
