@@ -60,7 +60,7 @@ bool* profile::getNoNos(){
 int array2int(bool array[12]){
     int sum = 0;
     for(int i = 0; i<12; i++){
-        sum = sum + (short)array[i] * pow(i,2);
+        sum = sum + (short)array[i] * pow(2,11-i);
     }
     return sum;
 }
