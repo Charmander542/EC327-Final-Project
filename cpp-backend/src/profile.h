@@ -30,7 +30,7 @@ Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info);
 //checks to see if loadProfile was successfull
 bool checkLoadProfile(string name);
 //adds a profile to the list of existing profiles
-void addProfile(string name, bool noNos[12]);
+void addProfile(string name, int noNo);
 Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info);
 //loads the last profile
 profile loadLastProfile();

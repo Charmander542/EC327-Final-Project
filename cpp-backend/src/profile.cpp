@@ -12,7 +12,7 @@ profile::profile(string name, int noNo){
     bool noNos[12];
 
     for(int i = 0; i<12;i++){
-        noNos[i] = noNo%2;
+        noNos[11-i] = noNo%2;
         noNo = noNo / 2;
     }
 
