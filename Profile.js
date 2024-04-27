@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById("parentDivOfNotProfileStuff").setAttribute("display", "none");
 document.getElementById("parentDivOfProfileStuff").setAttribute("display", "auto");
 
-
-});
-
 document.getElementById('submit').addEventListener('click', function() {
     let input1 = document.getElementById("username").value;
     let input2 = document.getElementById("birthday").value;
@@ -39,3 +36,4 @@ document.getElementById('submit').addEventListener('click', function() {
             "C++ Native addon add() result (IPC): " + result;
     });
 });
+})

@@ -1,18 +1,19 @@
 {
-    "ingredients": [
-        {
-            "name": "test_name",
-            "quantity":"qty",
-            "unit": "unit",
-            "date": "date"
-        },
-        {
-            "name": "test_name_2",
-            "quantity":"qty_2",
-            "unit": "unit_2",
-            "date": "date"
-        }
-
-    ]
-    
+  "ingredients": [
+    {
+      "name": "Sugar",
+      "quantity": "1",
+      "unit": "cup"
+    },
+    {
+      "name": "Eggs",
+      "quantity": "3",
+      "unit": ""
+    },
+    {
+      "name": "Milk",
+      "quantity": "1/2",
+      "unit": "cup"
+    }
+  ]
 }

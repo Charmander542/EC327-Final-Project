@@ -121,3 +121,28 @@ body {
 .submit-btn:hover {
     background: #555;
 }
+
+/* Style for the ingredients list */
+#ingredients {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Style for each ingredient */
+  .ingredient {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Style for ingredient name */
+  .ingredient dt {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Style for ingredient description */
+  .ingredient dd {
+    margin: 0;
+    color: #666;
+  }
+  

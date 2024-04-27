@@ -1,26 +1,101 @@
-//const {ipcRenderer} = require('electron');
-//const fs = require("fs");
+const fs = require('fs');
 
-//expire();
-//get current ingredient information
+// Function to update the ingredients JSON file
+function updateIngredientsFile(updatedIngredients) {
+  fs.writeFile('ingredients.json', JSON.stringify({ ingredients: updatedIngredients }, null, 2), err => {
+    if (err) {
+      console.error('Error writing to ingredients.json:', err);
+    } else {
+      console.log('Ingredients file updated successfully.');
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-  fetch('/cpp-backend/src/ingredients.txt')
-    .then(response => response.text())
-    .then(data => {
-      const lines = data.split('\n');
+  const ingredientsList = document.getElementById('ingredients');
+  let ingredientsData = null;
 
-      // Loop through each line
-      lines.forEach(line => {
-        // Split the line into individual values
-        const [name, quantity, importance, day, month, year] = line.split(' ');
+  // Load existing ingredients
+  fs.readFile('ingredients.json', (err, data) => {
+    if (err) throw err;
+    ingredientsData = JSON.parse(data);
+    renderIngredients();
+  });
 
-        // Create description
-        const description = quantity + ' ' + importance;
-        console.log(document.getElementById('ingredients'));
-        document.getElementById('ingredients').innerHTML += ('<dt>' + name + '</dt> <dd>' + description + '</dd>');
-      })
-    })
+  // Access the submit button and add event listener
+  document.getElementById('ingredient_submit').addEventListener('click', function () {
+    var date = new Date(document.getElementById("ingredient_date").value);
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // JavaScript months are 0-11
+    var year = date.getFullYear();
+
+    const newIngredient = {
+      name: document.getElementById("ingredient_name").value,
+      quantity: document.getElementById("ingredient_quantity").value,
+      unit: document.getElementById("ingredient_unit").value,
+      day: day,
+      month: month,
+      year: year
+    };
+
+    // Add the new ingredient to the list
+    ingredientsData.ingredients.push(newIngredient);
+
+    // Update the ingredients file
+    updateIngredientsFile(ingredientsData.ingredients);
+
+    // Re-render the ingredients
+    renderIngredients();
+  });
+
+  function renderIngredients() {
+    let html = ''; // Initialize HTML string
+
+    ingredientsData.ingredients.forEach(ingredient => {
+      const { name, quantity, unit } = ingredient;
+
+      // Create description
+      const description = `${quantity} ${unit}`;
+
+      // Create HTML for ingredient
+      html += `
+        <div class="ingredient">
+          <dt>${name}</dt>
+          <dd>${description}</dd>
+          <button class="delete-btn" data-name="${name}">X</button>
+        </div>
+      `;
+    });
+
+    // Set the HTML for the ingredients list
+    ingredientsList.innerHTML = html;
+
+    addDeleteListeners();
+  }
+
+  function addDeleteListeners() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', event => {
+        const ingredientName = event.target.getAttribute('data-name');
+
+        // Remove the ingredient from the list
+        ingredientsData.ingredients = ingredientsData.ingredients.filter(ingredient => ingredient.name !== ingredientName);
+
+        // Update the ingredients file
+        updateIngredientsFile(ingredientsData.ingredients);
+
+        // Re-render the ingredients
+        renderIngredients();
+      });
+    });
+  }
 });
+
+
+
+
+
 
 //add a new ingredient
 document.getElementById('ingredient_submit').addEventListener('click', function () {
