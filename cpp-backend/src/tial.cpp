@@ -16,6 +16,7 @@ string trim(const string& str) {
     size_t last = str.find_last_not_of(" \t\n\r\f\v'\"");
     return str.substr(first, (last - first + 1));
 }
+//splits one line of the text file, given as a string, into tokens and returns a vector of the tokens
 vector<string> split(const string &s, char delimiter) {
     vector<string> tokens;
     string token;
@@ -37,7 +38,7 @@ vector<string> split(const string &s, char delimiter) {
     tokens.push_back(currentToken.str()); // add the last token
     return tokens;
 }
-
+//prints recipe name from given recipeID (if it exists)
 void findRecipeById( const string& recipeId) {
     ifstream file("RAW_recipes.csv");
     string line;
@@ -66,14 +67,14 @@ void findRecipeById( const string& recipeId) {
 }
 
 
-
+//prints the recipe name corresponding to each recipe ID given a vector oof IDs
 void recipes(vector<string> IDs){ 
     for (int i=0; i < IDs.size() - 1; i++) { 
         findRecipeById(IDs[i]); 
     }
 }
 
-
+//returns true if given vector of search ingredients is a subset of a vector of ingredients for a specific recipe
 bool containsAllIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& searchIngredients) {
     for (const auto& ing : searchIngredients) {
         if (recipeIngredients.find(ing) == recipeIngredients.end()) {
@@ -82,12 +83,14 @@ bool containsAllIngredients(const unordered_set<string>& recipeIngredients, cons
     }
     return true;
 }
-// 9024,"['cream cheese', 'salmon', 'salt', 'lemon juice', 'onions', 'liquid smoke']"
+//given a vector of searchIngredients, generates a list of IDs that have a perfect match with ingredients.txt
 int main() {
-   ifstream file("Ingredients-Only.csv");
+    // recipe id and required ingredients pairs
+    // for example: one line is  9024,"['cream cheese', 'salmon', 'salt', 'lemon juice', 'onions', 'liquid smoke']"
+   ifstream file("Ingredients-Only.csv"); 
  
     string line;
-    vector<string> searchIngredients = {"chicken", "salt","rice"};
+    vector<string> searchIngredients = {"chicken", "salt","rice"}; // ingredients to search for (CHANGE TO READ ingredients.txt)
     unordered_set<string> searchIngredientsSet(searchIngredients.begin(), searchIngredients.end());
 
     // Skip the header
