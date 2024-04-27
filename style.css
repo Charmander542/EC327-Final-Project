@@ -61,6 +61,10 @@ body {
     cursor: pointer;
 }
 
+.navbar a button:hover{
+    background: #555;
+}
+
 .profile-container {
     width: 80%;
     max-width: 600px;
