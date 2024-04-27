@@ -9,7 +9,7 @@
 
 using namespace std;
 
-
+//recipe currently only stores NAME, TIME TO PREPARE, and STEPS of each recipe.
 class Recipe{ 
     public: 
         string recipe_name; 
