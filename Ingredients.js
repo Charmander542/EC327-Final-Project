@@ -1,10 +1,11 @@
 const fs = require('fs');
 
-// Function to update the ingredients JSON file
+// Function to update the ingredients text file
 function updateIngredientsFile(updatedIngredients) {
-  fs.writeFile('ingredients.json', JSON.stringify({ ingredients: updatedIngredients }, null, 2), err => {
+  const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedIngredients.map(ingredient => `${ingredient.name} ${ingredient.quantity} ${ingredient.importance} ${ingredient.day} ${ingredient.month} ${ingredient.year}`).join('\n');
+  fs.writeFile('./cpp-backend/src/ingredients.txt', data, err => {
     if (err) {
-      console.error('Error writing to ingredients.json:', err);
+      console.error('Error writing to ingredients.txt:', err);
     } else {
       console.log('Ingredients file updated successfully.');
     }
@@ -13,12 +14,18 @@ function updateIngredientsFile(updatedIngredients) {
 
 document.addEventListener('DOMContentLoaded', function () {
   const ingredientsList = document.getElementById('ingredients');
-  let ingredientsData = null;
+  let ingredientsData = [];
 
   // Load existing ingredients
-  fs.readFile('ingredients.json', (err, data) => {
+  fs.readFile('./cpp-backend/src/ingredients.txt', 'utf8', (err, data) => {
     if (err) throw err;
-    ingredientsData = JSON.parse(data);
+    const lines = data.split('\n');
+    lines.forEach((line, index) => {
+      if (index !== 0) { // Skip the header line
+        const [name, quantity, importance, day, month, year] = line.split(' ');
+        ingredientsData.push({ name, quantity, importance, day, month, year });
+      }
+    });
     renderIngredients();
   });
 
@@ -32,17 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const newIngredient = {
       name: document.getElementById("ingredient_name").value,
       quantity: document.getElementById("ingredient_quantity").value,
-      unit: document.getElementById("ingredient_unit").value,
+      importance: document.getElementById("ingredient_importance").value,
       day: day,
       month: month,
       year: year
     };
 
     // Add the new ingredient to the list
-    ingredientsData.ingredients.push(newIngredient);
+    ingredientsData.push(newIngredient);
 
     // Update the ingredients file
-    updateIngredientsFile(ingredientsData.ingredients);
+    updateIngredientsFile(ingredientsData);
 
     // Re-render the ingredients
     renderIngredients();
@@ -51,11 +58,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderIngredients() {
     let html = ''; // Initialize HTML string
 
-    ingredientsData.ingredients.forEach(ingredient => {
-      const { name, quantity, unit } = ingredient;
+    ingredientsData.forEach(ingredient => {
+      const { name, quantity, importance, day, month, year } = ingredient;
 
       // Create description
-      const description = `${quantity} ${unit}`;
+      const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
 
       // Create HTML for ingredient
       html += `
@@ -80,89 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const ingredientName = event.target.getAttribute('data-name');
 
         // Remove the ingredient from the list
-        ingredientsData.ingredients = ingredientsData.ingredients.filter(ingredient => ingredient.name !== ingredientName);
+        ingredientsData = ingredientsData.filter(ingredient => ingredient.name !== ingredientName);
 
         // Update the ingredients file
-        updateIngredientsFile(ingredientsData.ingredients);
+        updateIngredientsFile(ingredientsData);
 
         // Re-render the ingredients
         renderIngredients();
       });
     });
   }
-});
-
-
-
-
-
-
-//add a new ingredient
-document.getElementById('ingredient_submit').addEventListener('click', function () {
-  // initializing a JavaScript object
-  /*const new_ingredient = {
-    name: document.getElementById("ingredient_name").value,
-    quantity: document.getElementById("ingredient_quantity").value,
-    unit: document.getElementById("ingredient_unit").value,
-    date: document.getElementById("ingredient_expiration").value
-  };
-  var ingredientJSON = JSON.stringify(new_ingredient);
-  */
-
-  var date = new Date(document.getElementById("ingredient_date").value);
-  var day = date.getDay();
-  var month = date.getMonth();
-  var year = date.getFullYear();
-
-  //add the ingredient to the list
-  //ingredient(document.getElementById("ingredient_name").value, document.getElementById("ingredient_quantity").value, document.getElementById("ingredient_date").value);
-
-  // writing the JSON string content to a file
-  //fs.writeFile("ingredients.json", ingredientJson, (error) => {
-  // throwing the error
-  // in case of a writing problem
-  //if (error) {
-  // logging the error
-  //console.error(error);
-
-  //throw error;
-  // }
-
-  //console.log("ingredients.json written correctly");
-  //});
-});
-
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// No Node.js APIs are available in this process because
-// `nodeIntegration` is turned off. Use `preload.js` to
-// selectively enable features needed in the rendering
-// process.
-
-// Wait for the DOM to finish loading
-document.addEventListener('DOMContentLoaded', function () {
-
-  // Access the submit button and add event listener
-  document.getElementById('ingredient_submit').addEventListener('click', function () {
-
-    const ingredient = {
-      name: "Banana",
-      quantity: "99",
-      importance: "10",
-      day: 26,
-      month: 4,
-      year: 2024
-    };
-
-    console.log("Adding ingredient: " + ingredient)
-
-    // send ingredient data to main.js 
-    ipcRenderer.send('add-ingredient', ingredient);
-
-    // receive message from main.js
-    ipcRenderer.on('add-ingredient-result', (event, arg) => {
-      console.log(arg);
-    });
-  });
-
 });

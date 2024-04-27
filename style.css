@@ -122,27 +122,43 @@ body {
     background: #555;
 }
 
-/* Style for the ingredients list */
-#ingredients {
-    margin: 0;
-    padding: 0;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
   }
   
-  /* Style for each ingredient */
   .ingredient {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
-  /* Style for ingredient name */
   .ingredient dt {
     font-weight: bold;
-    margin-bottom: 5px;
+    color: #333;
   }
   
-  /* Style for ingredient description */
   .ingredient dd {
-    margin: 0;
+    margin-left: 10px;
     color: #666;
+  }
+  
+  .delete-btn {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .delete-btn:hover {
+    background-color: #d32f2f;
   }
   
