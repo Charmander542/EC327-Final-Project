@@ -58,24 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Set the HTML for the recipes list
     recipesList.innerHTML = html;
 
-    addDeleteListeners(recipesData);
   }
 
-  function addDeleteListeners(recipesData) {
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', event => {
-        const recipeName = event.target.getAttribute('data-name');
-
-        // Remove the recipe from the list
-        recipesData = recipesData.filter(recipe => recipe.name !== recipeName);
-
-        // Update the recipes file
-        updateRecipesFile(recipesData);
-
-        // Re-render the recipes
-        renderRecipes(recipesData);
-      });
-    });
-  }
 });
