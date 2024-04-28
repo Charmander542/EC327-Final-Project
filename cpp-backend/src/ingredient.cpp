@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_set>
 #include "recipe.h"
+#include "profile.h"
 
 using namespace std;
 
@@ -172,7 +173,10 @@ void recipes(const vector<string>& IDs) {
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
+    profile current = loadLastProfile();
+    current.noNos;
     ifstream file("Ingredients-Only.csv");
+
     /*
     if (!file.is_open()) {
         cout << "Failed to open file." << endl;
