@@ -85,20 +85,7 @@ void addProfile(string name, int noNo){
     return;
 }
 
-Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info){
-    Napi::Env env = info.Env();
-    //check if arguments are integer only.
-    if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
-        Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
-    }
-    //convert javascripts datatype to c++
-    Napi::String first = info[0].As<Napi::String>();
-    Napi::Number second = info[1].As<Napi::Number>();
 
-    addProfile(first.ToString(),second.Int32Value());
-    //run c++ function return value and return it in javascript
-    Napi::Boolean returnValue = Napi::Boolean::New(env, true);
-}
 
 //loadProfile
 
@@ -146,35 +133,7 @@ bool checkLoadProfile(string name){
     return existed;
 }
 
-//Wrapper for loadProfile
-Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info){
-    Napi::Env env = info.Env();
-    //check if argument is a string
-    if(info.Length()<1 || !info[0].IsString()){
-        Napi::TypeError::New(env, "arg1::String expected").ThrowAsJavaScriptException();
-    }
-    
-    //turns into a javascript string
-    Napi::String first = info[0].As<Napi::String>();
 
-    //Error Checks ti make sure the profile exists
-    if(checkLoadProfile(first.ToString())){
-        Napi::TypeError::New(env, "Profile does not exist").ThrowAsJavaScriptException();
-    }
-    
-    //run c++ function
-    profile temp = loadProfile(first.ToString());
-    
-    //generates an integer that stored the list of booleans
-    int num;
-    for(int i = 0; i < 12; i++){
-        num | ((short)temp.noNos[i] << i); 
-    }
-
-    //Returns value to Javascript
-    Napi::Number returnValue = Napi::Number::New(env, num);
-    return returnValue;
-}
 
 //loadLastProfile
 
@@ -199,34 +158,52 @@ profile loadLastProfile(){
     return newProfile;
 }
 
-//Wrapper for loadLastProfile
-Napi::Object loadLastProfileWrapped(){
-    
-    profile temp = loadLastProfile();
 
-    //run c++ function return value and return it in javascript
-    Napi::Object returnValue;
-    returnValue.Set(uint32_t(0),temp.name);
+
+int masterProfile(string name, int noNoNumber){
     
-    int num;
-    for(int i = 0; i < 12; i++){
-        num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+    if(checkLoadProfile(name)){
+        loadProfile(name);
     }
-    returnValue.Set(uint32_t(1),num);
+    else{
+        addProfile(name, noNoNumber);
+    }
 
-    return returnValue;
+    return 1;
 }
+
+//MasterWrapper
+
+Napi::Number masterWrapper(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+ //check if arguments are integer only.
+ if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
+    Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
+ }
+ //convert javascripts datatype to c++
+ Napi::String first = info[0].As<Napi::String>();
+ Napi::Number second = info[1].As<Napi::Number>();
+//run c++ function return value and return it in javascript
+ Napi::Number returnValue = Napi::Number::New(env, masterProfile(first, second.Int32Value()));
+ 
+ return returnValue;
+}
+
+
 
 //NAPI requirements
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) 
 {
   //export Napi function
-  exports.Set("loadLastProfile", Napi::Function::New(env, loadLastProfileWrapped));
-  exports.Set("loadProfile", Napi::Function::New(env, loadProfileWrapped));
-  exports.Set("addProfile", Napi::Function::New(env, addProfileWrapped));
+  
   return exports;
 }
+
+
+
+
+
 
 
 
@@ -267,3 +244,70 @@ profile::~profile(){
     delete[] noNos;
 
 }*/
+
+
+
+//Wrapper for loadLastProfile
+/*Napi::Object loadLastProfileWrapped(){
+    
+    profile temp = loadLastProfile();
+
+    //run c++ function return value and return it in javascript
+    Napi::Object returnValue;
+    returnValue.Set(uint32_t(0),temp.name);
+    
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+    }
+    returnValue.Set(uint32_t(1),num);
+
+    return returnValue;
+}*/
+
+//Wrapper for loadProfile
+/*
+Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+    //check if argument is a string
+    if(info.Length()<1 || !info[0].IsString()){
+        Napi::TypeError::New(env, "arg1::String expected").ThrowAsJavaScriptException();
+    }
+    
+    //turns into a javascript string
+    Napi::String first = info[0].As<Napi::String>();
+
+    //Error Checks ti make sure the profile exists
+    if(checkLoadProfile(first.ToString())){
+        Napi::TypeError::New(env, "Profile does not exist").ThrowAsJavaScriptException();
+    }
+    
+    //run c++ function
+    profile temp = loadProfile(first.ToString());
+    
+    //generates an integer that stored the list of booleans
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | ((short)temp.noNos[i] << i); 
+    }
+
+    //Returns value to Javascript
+    Napi::Number returnValue = Napi::Number::New(env, num);
+    return returnValue;
+} */
+
+/*
+Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+    //check if arguments are integer only.
+    if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
+        Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
+    }
+    //convert javascripts datatype to c++
+    Napi::String first = info[0].As<Napi::String>();
+    Napi::Number second = info[1].As<Napi::Number>();
+
+    addProfile(first.ToString(),second.Int32Value());
+    //run c++ function return value and return it in javascript
+    Napi::Boolean returnValue = Napi::Boolean::New(env, true);
+} */
