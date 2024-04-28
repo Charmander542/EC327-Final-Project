@@ -176,16 +176,6 @@ void ingredient::recipefunc() {
     profile current = loadLastProfile();
     current.noNos;
     ifstream file("Ingredients-Only.csv");
-<<<<<<< HEAD
-=======
-
-    /*
-    if (!file.is_open()) {
-        cout << "Failed to open file." << endl;
-        return;
-    }
-    */
->>>>>>> c6e255d49af3b8572a3fed9a8cf57cbd74ddd286
 
     string line;
     vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
@@ -268,7 +258,7 @@ void ingredient::recipefunc() {
                 string recipe_name = columns[0];
                 string time2cook = columns[2];
                 string steps = columns[8];
-                output << "~" << recipe_name << "~" << time2cook << "~" << steps << endl;
+                output << recipe_name << "~" << time2cook << "~" << steps << endl;
             }
         }
         
