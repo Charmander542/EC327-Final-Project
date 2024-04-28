@@ -231,6 +231,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
 */
 
 
+
+
+//todo This marks the end of the code, anything after this is extra and not needed
 /*Napi::String loadProfileName(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     return Napi::String::New(env, p1.name);
@@ -240,7 +243,7 @@ Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     int num;
     for(int i = 0; i < 12; i++){
-        num | ((short)p1.noNos[i] << i); //todo CHARLIE CHECK THIS
+        num | ((short)p1.noNos[i] << i); 
     }
 
     return Napi::Number::New(env, (double)num);
