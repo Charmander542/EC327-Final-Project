@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 
 // Function to update the recipes text file
 function updateRecipesFile(updatedRecipes) {
-  const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.quantity} ${recipe.importance} ${recipe.day} ${recipe.month} ${recipe.year}`).join('\n');
+  const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.timeToCook} ${recipe.steps}`).join('\n');
   fs.writeFile('./cpp-backend/src/recipes.txt', data, err => {
     if (err) {
       console.error('Error writing to recipes.txt:', err);
@@ -21,8 +21,8 @@ function readRecipesFile(callback) {
     const recipesData = [];
     lines.forEach((line, index) => {
       if (index !== 0) { // Skip the header line
-        const [name, quantity, importance, day, month, year] = line.split('~');
-        recipesData.push({ name, quantity, importance, day, month, year });
+        const [name,timeToCook,steps] = line.split(' ');
+        recipesData.push({ name,timeToCook,steps });
       }
     });
     callback(recipesData);
@@ -56,10 +56,10 @@ function renderRecipes(recipesData) {
   recipesList.innerHTML = '';
   
   recipesData.forEach(recipe => {
-    const { name, quantity, importance, day, month, year } = recipe;
+    const { name,timeToCook,steps } = recipe;
 
     // Create description
-    const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
+    const description = `Time to Cook: ${timeToCook}, Steps: ${steps}`;
 
     // Create HTML for recipe item
     const recipeItem = document.createElement('li');
