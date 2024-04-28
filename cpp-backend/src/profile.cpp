@@ -196,7 +196,7 @@ Napi::Number masterWrapper(const Napi::CallbackInfo& info){
 Napi::Object Init(Napi::Env env, Napi::Object exports) 
 {
   //export Napi function
-  
+  exports.Set("masterProfile", Napi::Function::New(env, masterWrapper));
   return exports;
 }
 
