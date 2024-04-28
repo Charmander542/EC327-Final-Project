@@ -40,8 +40,6 @@ document.getElementById('data').addEventListener('click', function() {
     // Calling functions of native addon
     var result = populateRecipes();
 
-
-
     // Load existing recipes after populating
     readRecipesFile(function(recipesData) {
       renderRecipes(recipesData);

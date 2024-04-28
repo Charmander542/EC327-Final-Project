@@ -7,6 +7,7 @@ document.getElementById("parentDivOfNotProfileStuff").setAttribute("display", "n
 document.getElementById("parentDivOfProfileStuff").setAttribute("display", "auto");
 
 document.getElementById('submit').addEventListener('click', function() {
+    preventDefault();
     let input1 = document.getElementById("username").value;
     let input2 = document.getElementById("birthday").value;
 
@@ -22,15 +23,15 @@ document.getElementById('submit').addEventListener('click', function() {
     console.log(restrictionsArray);
 
     // send username, birthday, and restrictions to main.js 
-    ipcRenderer.send('asynchronous-message', { 'input1': input1, 'input2': input2, 'restrictions': restrictionsArray });
+    ipcRenderer.send('asynchronous-message', { 'input1': input1, 'restrictions': restrictionsArray });
 
     // receive message from main.js
     ipcRenderer.on('asynchronous-reply', (event, arg) => {
         // Address of native addon
-        const { loadProfile } = require('./cpp-backend/build/Release/addon.node');
+        const { masterProfile } = require('./cpp-backend/build/Release/addon.node');
 
         // Calling functions of native addon
-        var result = loadProfile(arg['input1']);
+        var result = masterProfile(arg['input1'], arg['restrictionsArray']);
 
         document.getElementById('tag_result').innerHTML =
             "C++ Native addon add() result (IPC): " + result;
