@@ -30,20 +30,18 @@ function readRecipesFile(callback) {
 }
 
 document.getElementById('data').addEventListener('click', function() {
-
   // send username to main.js 
   ipcRenderer.send('asynchronous-message');
 
   // receive message from main.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
     // Address of native addon
-    const {populateRecipies, loadLastProfile} = require('./cpp-backend/build/Release/addon.node');
-    
-    var profile = loadLastProfile();
+    const { populateRecipies } = require('./cpp-backend/build/Release/addon.node');
+
     // Calling functions of native addon
     var result = populateRecipies(); //TODO add a pass for the nonos
 
-    document.getElementById('tag_result').innerHTML = 
+    document.getElementById('tag_result').innerHTML =
       "C++ Native addon populateRecipies() result (IPC): " + result;
 
     // Load existing recipes after populating
@@ -56,13 +54,14 @@ document.getElementById('data').addEventListener('click', function() {
 function renderRecipes(recipesData) {
   const recipesList = document.getElementById('recipes');
   recipesList.innerHTML = '';
-    recipesData.forEach(recipe => {
+  
+  recipesData.forEach(recipe => {
     const { name, quantity, importance, day, month, year } = recipe;
 
     // Create description
     const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
 
-    // Create HTML for recipe
+    // Create HTML for recipe item
     const recipeItem = document.createElement('li');
     recipeItem.className = 'recipe';
     recipeItem.innerHTML = `
@@ -70,6 +69,56 @@ function renderRecipes(recipesData) {
       <p>${description}</p>
     `;
 
+    // Create button for recipe item
+    const button = document.createElement('button');
+    button.innerText = 'View Instructions';
+    button.className = 'view-instructions-button';
+    button.addEventListener('click', () => {
+      // Read instructions from file and open popup
+      readRecipeInstructions(name);
+    });
+
+    // Append button to recipe item
+    recipeItem.appendChild(button);
+
     recipesList.appendChild(recipeItem);
   });
+}
+
+function readRecipeInstructions(recipeName) {
+  // Assume name-of-the-recipe.txt exists in the same directory as the script
+  const fileName = `./cpp-backend/src/${recipeName}.txt`;
+
+  // Fetch the instructions from the file
+  fetch(fileName)
+    .then(response => response.text())
+    .then(data => {
+      // Open a popup with the instructions
+      openPopup(data);
+    })
+    .catch(error => {
+      console.error('Error reading recipe instructions:', error);
+    });
+}
+
+function openPopup(instructions) {
+  // Create a popup element
+  const popup = document.createElement('div');
+  popup.className = 'popup';
+  popup.innerHTML = `
+    <div class="popup-content">
+      <span class="close-popup">&times;</span>
+      <h2>Recipe Instructions</h2>
+      <pre>${instructions}</pre>
+    </div>
+  `;
+
+  // Close popup when close button is clicked
+  const closeButton = popup.querySelector('.close-popup');
+  closeButton.addEventListener('click', () => {
+    document.body.removeChild(popup);
+  });
+
+  // Append the popup to the body
+  document.body.appendChild(popup);
 }
