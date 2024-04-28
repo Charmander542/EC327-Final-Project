@@ -170,11 +170,15 @@ void recipes(const vector<string>& IDs) {
 }
 
 void ingredient::recipefunc() {
+    const int MAX_RECIPES_GENERATED=50;
+    int num_recipes_generated=0;
     ifstream file("Ingredients-Only.csv");
+    /*
     if (!file.is_open()) {
         cout << "Failed to open file." << endl;
         return;
     }
+    */
 
     string line;
     vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
@@ -188,19 +192,27 @@ void ingredient::recipefunc() {
         string cell;
         unordered_set<string> recipeIngredients;
 
+        //print out what is in recipeIngredients
+        for (const auto& elem : recipeIngredients)
+            cout << elem << ' ';
+        cout << '\n';
+
         // Read until the ingredients field (assuming index 1)
         getline(lineStream, cell, ','); // Skip the ID
         getline(lineStream, cell); // Read the full ingredient list
 
-        // Remove the enclosing brackets
+        // Remove the enclosing brackets for the ingredient list for each recipe
         cell = cell.substr(1, cell.size() - 2);
         istringstream cellStream(cell);
         string ingredient1;
+        cout<<ingredient1<<endl;
 
         while (getline(cellStream, ingredient1, ',')) {
             ingredient1 = trim(ingredient1); // Trim spaces and single quotes
             recipeIngredients.insert(ingredient1);
         }
+
+
 
         if (containsAllIngredients(recipeIngredients, searchIngredientsSet)) {
             istringstream idStream(line);
@@ -221,6 +233,35 @@ void ingredient::recipefunc() {
         }
 
         bool headerSkipped = false;
+
+        //modifies recipe text file to add recipe entries
+        while (getline(file, line)) {
+            if(num_recipes_generated==MAX_RECIPES_GENERATED){
+                break;
+            }
+            if (!headerSkipped) {  // Skip the header line
+                headerSkipped = true;
+                continue;
+            }
+
+            vector<string> columns = split(line, ',');
+            if (columns.size() < 9) continue;  // Ensure there are enough columns
+
+            string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
+
+            //idSet contains the recipes that were found as matches
+            
+            //columns of RAW_recipes.csv:
+            //name	id	minutes	contributor_id	submitted	tags	nutrition	n_steps	steps	description	ingredients	n_ingredients
+
+            if (idSet.find(cleanId) != idSet.end()) {
+                output<< line<<endl;
+                num_recipes_generated++;
+            }
+        }
+        
+        //old while loop that only saves recipe name, time to cook ,total steps to cook.
+        /* 
         while (getline(file, line)) {
             if (!headerSkipped) {  // Skip the header line
                 headerSkipped = true;
@@ -232,6 +273,11 @@ void ingredient::recipefunc() {
 
             string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
 
+            //idSet contains the recipes that were found as matches
+            
+            //columns of RAW_recipes.csv:
+            //name	id	minutes	contributor_id	submitted	tags	nutrition	n_steps	steps	description	ingredients	n_ingredients
+
             if (idSet.find(cleanId) != idSet.end()) {
                 string recipe_name = columns[0];
                 string time2cook = columns[2];
@@ -239,6 +285,7 @@ void ingredient::recipefunc() {
                 output << "Recipe name: " << recipe_name << ", Time to cook: " << time2cook << ", Total steps to cook: " << steps << endl;
             }
         }
+        */
         file.close();
         output.close();
     } else {
@@ -250,15 +297,4 @@ int populateRecipies() {
     populateIngredients();
     ingredient::recipefunc();
     return 1;
-}
-
-Napi::Number populateRecipiesWrapped(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-    Napi::Number returnValue = Napi::Number::New(env, populateRecipies());
-    return returnValue;
-}
-
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set("populateRecipies", Napi::Function::New(env, populateRecipiesWrapped));
-    return exports;
 }
