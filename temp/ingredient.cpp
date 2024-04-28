@@ -173,19 +173,9 @@ void recipes(const vector<string>& IDs) {
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
-    profile current = loadLastProfile();
-    current.noNos;
+    profile p = loadLastProfile();
+    p.noNos;
     ifstream file("Ingredients-Only.csv");
-<<<<<<< HEAD
-=======
-
-    /*
-    if (!file.is_open()) {
-        cout << "Failed to open file." << endl;
-        return;
-    }
-    */
->>>>>>> c6e255d49af3b8572a3fed9a8cf57cbd74ddd286
 
     string line;
     vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
@@ -284,3 +274,4 @@ int populateRecipies() {
     ingredient::recipefunc();
     return 1;
 }
+

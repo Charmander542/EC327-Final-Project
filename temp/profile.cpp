@@ -49,6 +49,8 @@ profile::profile(string name, int noNo){
     
 }
 
+profile::profile(){}
+
 //This returns a pointer to the array, probably don't need it but it's here
 bool* profile::getNoNos(){
     return noNos;

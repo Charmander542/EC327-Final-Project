@@ -35,10 +35,10 @@ document.getElementById('data').addEventListener('click', function() {
   // receive message from main.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
     // Address of native addon
-    const { populateRecipies } = require('./cpp-backend/build/Release/addon.node');
+    const { populateRecipes } = require('./cpp-backend/build/Release/addon.node');
 
     // Calling functions of native addon
-    var result = populateRecipies();
+    var result = populateRecipes();
 
 
 
