@@ -1,7 +1,6 @@
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
 
-
 // Function to update the recipes text file
 function updateRecipesFile(updatedRecipes) {
   const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.quantity} ${recipe.importance} ${recipe.day} ${recipe.month} ${recipe.year}`).join('\n');
@@ -30,54 +29,47 @@ function readRecipesFile(callback) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const recipesList = document.getElementById('recipes');
+document.getElementById('data').addEventListener('click', function() {
 
-  // Load existing recipes
-  readRecipesFile(function(recipesData) {
-    renderRecipes(recipesData);
-  });
+  // send username to main.js 
+  ipcRenderer.send('asynchronous-message');
 
-  function renderRecipes(recipesData) {
-    let html = ''; // Initialize HTML string
+  // receive message from main.js
+  ipcRenderer.on('asynchronous-reply', (event, arg) => {
+    // Address of native addon
+    const {populateRecipies, loadLastProfile} = require('./cpp-backend/build/Release/addon.node');
+    
+    var profile = loadLastProfile();
+    // Calling functions of native addon
+    var result = populateRecipies(); //TODO add a pass for the nonos
 
-    recipesData.forEach(recipe => {
-      const { name, quantity, importance, day, month, year } = recipe;
+    document.getElementById('tag_result').innerHTML = 
+      "C++ Native addon populateRecipies() result (IPC): " + result;
 
-      // Create description
-      const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
-
-      // Create HTML for recipe
-      html += `
-        <li class="recipe">
-          <h3>${name}</h3>
-          <p>${description}</p>
-        </li>
-      `;
+    // Load existing recipes after populating
+    readRecipesFile(function(recipesData) {
+      renderRecipes(recipesData);
     });
-
-    // Set the HTML for the recipes list
-    recipesList.innerHTML = html;
-
-  }
-
+  });
 });
 
-document.getElementById('data').addEventListener('click', function() {
-    
-    // send username to main.js 
-    ipcRenderer.send('asynchronous-message');
-  
-    // receive message from main.js
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
-      // Address of native addon
-      const {populateRecipies} = require('./cpp-backend/build/Release/addon.node');
-  
-      // Calling functions of native addon
-      var result = populateRecipies();
-  
-      document.getElementById('tag_result').innerHTML = 
-          "C++ Native addon populateRecipies() result (IPC): " + result;
-    })
-  
-    });
+function renderRecipes(recipesData) {
+  const recipesList = document.getElementById('recipes');
+  recipesList.innerHTML = '';
+    recipesData.forEach(recipe => {
+    const { name, quantity, importance, day, month, year } = recipe;
+
+    // Create description
+    const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
+
+    // Create HTML for recipe
+    const recipeItem = document.createElement('li');
+    recipeItem.className = 'recipe';
+    recipeItem.innerHTML = `
+      <h3>${name}</h3>
+      <p>${description}</p>
+    `;
+
+    recipesList.appendChild(recipeItem);
+  });
+}

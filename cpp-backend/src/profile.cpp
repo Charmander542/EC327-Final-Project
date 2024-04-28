@@ -66,7 +66,7 @@ int array2int(bool array[12]){
 }
 
 //this function turns the array into a boolean integer
-/*bool* integer2array(int num){
+bool* integer2array(int num){
     bool array[12];
 
     for(int i = 0; i<12;i++){
@@ -74,152 +74,151 @@ int array2int(bool array[12]){
         num = num / 2;
     }
     return array;
-}*/
+}
 
 //addProfile 
 
-    //This returns the object of a new profile.
-    void addProfile(string name, int noNo){
-        
-        profile newProfile(name,noNo);
-        return;
+//This returns the object of a new profile.
+void addProfile(string name, int noNo){
+    
+    profile newProfile(name,noNo);
+    return;
+}
+
+Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+    //check if arguments are integer only.
+    if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
+        Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
     }
+    //convert javascripts datatype to c++
+    Napi::String first = info[0].As<Napi::String>();
+    Napi::Number second = info[1].As<Napi::Number>();
 
-    /*Napi::Boolean addProfileWrapped(const Napi::CallbackInfo& info){
-        Napi::Env env = info.Env();
-        //check if arguments are integer only.
-        if(info.Length()<2 || !info[0].IsString() || !info[1].IsNumber()){
-            Napi::TypeError::New(env, "arg1::String, arg2::Number expected").ThrowAsJavaScriptException();
-        }
-        //convert javascripts datatype to c++
-        Napi::String first = info[0].As<Napi::String>();
-        Napi::Number second = info[1].As<Napi::Number>();
-
-        addProfile(first.ToString(),second.Int32Value());
-        //run c++ function return value and return it in javascript
-        Napi::Boolean returnValue = Napi::Boolean::New(env, true);
-    }*/
+    addProfile(first.ToString(),second.Int32Value());
+    //run c++ function return value and return it in javascript
+    Napi::Boolean returnValue = Napi::Boolean::New(env, true);
+}
 
 //loadProfile
 
-    //This loads the profile with the designated name
-    profile loadProfile(string name){
-        string storedName;
-        bool storedNoNos[12];
-        ifstream input;
+//This loads the profile with the designated name
+profile loadProfile(string name){
+    string storedName;
+    bool storedNoNos[12];
+    ifstream input;
 
-        input.open("users.txt");
-        
-        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
-            if(name == storedName){
-                    break;
-            }
-        }
-        
-        input.close();
-
-        int noNo = array2int(storedNoNos);
-
-        profile newProfile(storedName, noNo);
-        return newProfile;
-
-    }
-
-    //checks if loadProfile with the name provided is accurate or not
-    bool checkLoadProfile(string name){
-        string storedName;
-        bool storedNoNos[12];
-        ifstream input;
-        bool existed = false;
-
-        input.open("users.txt");
-        
-        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
-            if(name == storedName){
-                existed = true;
+    input.open("users.txt");
+    
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+        if(name == storedName){
                 break;
-            }
         }
-        
-        input.close();
+    }
+    
+    input.close();
 
-        return existed;
+    int noNo = array2int(storedNoNos);
+
+    profile newProfile(storedName,noNo);
+    return newProfile;
+
+}
+
+//checks if loadProfile with the name provided is accurate or not
+bool checkLoadProfile(string name){
+    string storedName;
+    bool storedNoNos[12];
+    ifstream input;
+    bool existed = false;
+
+    input.open("users.txt");
+    
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+        if(name == storedName){
+            existed = true;
+            break;
+        }
+    }
+    
+    input.close();
+
+    return existed;
+}
+
+//Wrapper for loadProfile
+Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+    //check if argument is a string
+    if(info.Length()<1 || !info[0].IsString()){
+        Napi::TypeError::New(env, "arg1::String expected").ThrowAsJavaScriptException();
+    }
+    
+    //turns into a javascript string
+    Napi::String first = info[0].As<Napi::String>();
+
+    //Error Checks ti make sure the profile exists
+    if(checkLoadProfile(first.ToString())){
+        Napi::TypeError::New(env, "Profile does not exist").ThrowAsJavaScriptException();
+    }
+    
+    //run c++ function
+    profile temp = loadProfile(first.ToString());
+    
+    //generates an integer that stored the list of booleans
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | ((short)temp.noNos[i] << i); 
     }
 
-    //Wrapper for loadProfile
-    /*Napi::Number loadProfileWrapped(const Napi::CallbackInfo& info){
-        Napi::Env env = info.Env();
-        //check if argument is a string
-        if(info.Length()<1 || !info[0].IsString()){
-            Napi::TypeError::New(env, "arg1::String expected").ThrowAsJavaScriptException();
-        }
-        
-        //turns into a javascript string
-        Napi::String first = info[0].As<Napi::String>();
-
-        //Error Checks ti make sure the profile exists
-        if(checkLoadProfile(first.ToString())){
-            Napi::TypeError::New(env, "Profile does not exist").ThrowAsJavaScriptException();
-        }
-        
-        //run c++ function
-        profile temp = loadProfile(first.ToString());
-        
-        //generates an integer that stored the list of booleans
-        int num;
-        for(int i = 0; i < 12; i++){
-            num | ((short)temp.noNos[i] << i); 
-        }
-
-        //Returns value to Javascript
-        Napi::Number returnValue = Napi::Number::New(env, num);
-        return returnValue;
-    }*/
+    //Returns value to Javascript
+    Napi::Number returnValue = Napi::Number::New(env, num);
+    return returnValue;
+}
 
 //loadLastProfile
 
-    //loads the last profile uploaded 
-    profile loadLastProfile(){
-        string storedName;
-        bool storedNoNos[12];
-        ifstream input;
-        bool existed = false;
+//loads the last profile uploaded 
+profile loadLastProfile(){
+    string storedName;
+    bool storedNoNos[12];
+    ifstream input;
+    bool existed = false;
 
-        input.open("users.txt");
-        
-        while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
-            
-        }
-        
-        input.close();
-
-        int noNo = array2int(storedNoNos);
-
-        profile newProfile(storedName,noNo);
-        return newProfile;
-    }
-
-    //Wrapper for loadLastProfile
-    /*
-    Napi::Object loadLastProfileWrapped(){
-        
-        profile temp = loadLastProfile();
-
-        //run c++ function return value and return it in javascript
-        Napi::Object returnValue;
-        returnValue.Set(uint32_t(0),temp.name);
-        
-        int num;
-        for(int i = 0; i < 12; i++){
-            num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
-        }
-        returnValue.Set(uint32_t(1),num);
+    input.open("users.txt");
     
-        return returnValue;
+    while(input >> storedName  >> storedNoNos[0] >> storedNoNos[1] >> storedNoNos[2] >> storedNoNos[3] >> storedNoNos[4] >> storedNoNos[5] >> storedNoNos[6] >> storedNoNos[7] >> storedNoNos[8] >> storedNoNos[9] >> storedNoNos[10] >> storedNoNos[11]){
+        
     }
-    */
+    
+    input.close();
+
+    int noNo = array2int(storedNoNos);
+
+    profile newProfile(storedName,noNo);
+    return newProfile;
+}
+
+//Wrapper for loadLastProfile
+Napi::Object loadLastProfileWrapped(){
+    
+    profile temp = loadLastProfile();
+
+    //run c++ function return value and return it in javascript
+    Napi::Object returnValue;
+    returnValue.Set(uint32_t(0),temp.name);
+    
+    int num;
+    for(int i = 0; i < 12; i++){
+        num | ((short)temp.noNos[i] << i); //todo CHARLIE CHECK THIS
+    }
+    returnValue.Set(uint32_t(1),num);
+
+    return returnValue;
+}
+
 //NAPI requirements
-/*
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) 
 {
   //export Napi function
@@ -228,12 +227,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set("addProfile", Napi::Function::New(env, addProfileWrapped));
   return exports;
 }
-*/
 
 
 
-
-//todo This marks the end of the code, anything after this is extra and not needed
 /*Napi::String loadProfileName(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     return Napi::String::New(env, p1.name);
@@ -243,7 +239,7 @@ Napi::Number loadProfileNoNos(const Napi::CallbackInfo& info){
     Napi::Env env = info.Env();
     int num;
     for(int i = 0; i < 12; i++){
-        num | ((short)p1.noNos[i] << i); 
+        num | ((short)p1.noNos[i] << i); //todo CHARLIE CHECK THIS
     }
 
     return Napi::Number::New(env, (double)num);

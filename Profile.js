@@ -27,10 +27,10 @@ document.getElementById('submit').addEventListener('click', function() {
     // receive message from main.js
     ipcRenderer.on('asynchronous-reply', (event, arg) => {
         // Address of native addon
-        const { add } = require('./cpp-backend/build/Release/addon.node');
+        const { loadProfile } = require('./cpp-backend/build/Release/addon.node');
 
         // Calling functions of native addon
-        var result = add(arg['input1'], parseInt(arg['input2']));
+        var result = loadProfile(arg['input1']);
 
         document.getElementById('tag_result').innerHTML =
             "C++ Native addon add() result (IPC): " + result;
