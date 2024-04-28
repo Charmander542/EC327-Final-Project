@@ -20,10 +20,9 @@ function readRecipesFile(callback) {
     const lines = data.split('\n');
     const recipesData = [];
     lines.forEach((line, index) => {
-      if (index !== 0) { // Skip the header line
-        const [name,timeToCook,steps] = line.split(' ');
+  // Skip the header line
+        const [name,timeToCook,steps] = line.split('~');
         recipesData.push({ name,timeToCook,steps });
-      }
     });
     callback(recipesData);
   });
@@ -59,7 +58,7 @@ function renderRecipes(recipesData) {
     const { name,timeToCook,steps } = recipe;
 
     // Create description
-    const description = `Time to Cook: ${timeToCook}, Steps: ${steps}`;
+    const description = `Time to Cook: ${timeToCook}`;
 
     // Create HTML for recipe item
     const recipeItem = document.createElement('li');
@@ -75,7 +74,7 @@ function renderRecipes(recipesData) {
     button.className = 'view-instructions-button';
     button.addEventListener('click', () => {
       // Read instructions from file and open popup
-      readRecipeInstructions(name);
+      openPopup(steps);
     });
 
     // Append button to recipe item
@@ -83,22 +82,6 @@ function renderRecipes(recipesData) {
 
     recipesList.appendChild(recipeItem);
   });
-}
-
-function readRecipeInstructions(recipeName) {
-  // Assume name-of-the-recipe.txt exists in the same directory as the script
-  const fileName = `./cpp-backend/src/${recipeName}.txt`;
-
-  // Fetch the instructions from the file
-  fetch(fileName)
-    .then(response => response.text())
-    .then(data => {
-      // Open a popup with the instructions
-      openPopup(data);
-    })
-    .catch(error => {
-      console.error('Error reading recipe instructions:', error);
-    });
 }
 
 function openPopup(instructions) {
@@ -109,7 +92,7 @@ function openPopup(instructions) {
     <div class="popup-content">
       <span class="close-popup">&times;</span>
       <h2>Recipe Instructions</h2>
-      <pre>${instructions}</pre>
+      <p>${instructions}</p>
     </div>
   `;
 
