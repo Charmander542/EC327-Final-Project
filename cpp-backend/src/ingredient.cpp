@@ -7,10 +7,12 @@
 #include <string>
 #include <unordered_set>
 #include "recipe.h"
+
 using namespace std;
-vector <string> ingredients;
-ingredient::ingredient(string ingredient_name, string quantity, int importance,int day, int month, int year){ 
-    string resultant = ""; 
+
+vector<string> ingredients;
+
+ingredient::ingredient(string ingredient_name, string quantity, int importance, int day, int month, int year) {
     tm date = {};  // Initialize to zero
     date.tm_mday = day;
     date.tm_mon = month - 1;  // tm_mon is zero-based, January is 0
@@ -18,47 +20,56 @@ ingredient::ingredient(string ingredient_name, string quantity, int importance,i
     // Normalize and convert to time_t
     time_t date_time = mktime(&date);
     if (date_time == -1) {
-     cout << "Wrong date entry" << endl;
-    }   
+        cout << "Wrong date entry" << endl;
+        return;
+    }
 
-    ofstream output;
-    output.open("ingredients.txt",ios::app);
+    ofstream output("ingredients.txt", ios::app);
     output << ingredient_name << " " << quantity << " " << importance << " " << date_time << endl;
+    output.close();
     ingredients.push_back(ingredient_name);
-    output.close();
 }
-void ingredient::clear(){
-    ofstream output;
-    output.open("ingredients.txt");
-    output << "";
-    output.close();
-    ofstream output2;
-    output.open("recipes.txt");
-    output << "";
-    output.close();
-}
-int ingredient::remove_ingredient(const string name) {
-    ifstream input;
-    ofstream tempout;
-    time_t date_time;
-    string ingr, quant;
-    int imp;
 
-    input.open("ingredients.txt");
-    tempout.open("temp.txt");
+void populateIngredients() {
+    string ingredient_name;
+    int importance;
+    string quantity;
+    time_t date_time;
+    ifstream input("ingredients.txt");
+    while (input >> ingredient_name >> quantity >> importance >> date_time) {
+        ingredients.push_back(ingredient_name);
+    }
+    input.close();
+}
+
+void ingredient::clear() {
+    ofstream output("ingredients.txt");
+    output << "";
+    output.close();
+    ofstream output2("recipes.txt");
+    output << "";
+    output.close();
+}
+
+int ingredient::remove_ingredient(const string name) {
+    ifstream input("ingredients.txt");
+    ofstream tempout("temp.txt");
 
     if (input.fail()) {
-        std::cout << "Error! The file doesn't exist!" << endl;
+        cout << "Error! The file doesn't exist!" << endl;
         return 1;
     }
 
+    string ingr, quant;
+    int imp;
+    time_t date_time;
+
     while (input >> ingr >> quant >> imp >> date_time) {
-        cout << "Checking: " << ingr << " against " << name << endl;
         if (ingr != name) {
             tempout << ingr << " " << quant << " " << imp << " " << date_time << '\n';
-            cout << "Writing to temp: " << ingr << " " << quant << " " << imp << " " << date_time << endl;
         }
     }
+
     input.close();
     tempout.close();
     remove("ingredients.txt");
@@ -69,17 +80,15 @@ int ingredient::remove_ingredient(const string name) {
 
 void ingredient::expired() {
     time_t today = time(0);
-    ifstream input;
-    ofstream tempout;
-    time_t date_time;
+    ifstream input("ingredients.txt");
+    ofstream tempout("temp.txt");
+
     string ingr, quant;
     int imp;
-
-    input.open("ingredients.txt");
-    tempout.open("temp.txt");
+    time_t date_time;
 
     while (input >> ingr >> quant >> imp >> date_time) {
-        if (date_time >= today) {  // Updated condition to filter expired ingredients
+        if (date_time >= today) {
             tempout << ingr << " " << quant << " " << imp << " " << date_time << '\n';
         }
     }
@@ -97,7 +106,7 @@ string trim(const string& str) {
     }
     size_t last = str.find_last_not_of(" \t\n\r\f\v'\"");
     return str.substr(first, (last - first + 1));
-};
+}
 
 bool containsAllIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& searchIngredients) {
     for (const auto& ing : searchIngredients) {
@@ -107,7 +116,8 @@ bool containsAllIngredients(const unordered_set<string>& recipeIngredients, cons
     }
     return true;
 }
- vector<string> split(const string &s, char delimiter) {
+
+vector<string> split(const string &s, char delimiter) {
     vector<string> tokens;
     string token;
     istringstream tokenStream(s);
@@ -129,7 +139,7 @@ bool containsAllIngredients(const unordered_set<string>& recipeIngredients, cons
     return tokens;
 }
 
-void findRecipeById( const string& recipeId) {
+void findRecipeById(const string& recipeId) {
     ifstream file("RAW_recipes.csv");
     string line;
     bool headerSkipped = false;
@@ -146,37 +156,37 @@ void findRecipeById( const string& recipeId) {
         }
 
         if (columns[1].erase(0, columns[1].find_first_not_of('\"')) == recipeId) {
-            std::cout << "Recipe Steps for ID " << recipeId << ":\n" << columns[8] << endl;
+            cout << "Recipe Steps for ID " << recipeId << ":\n" << columns[8] << endl;
             file.close();
             return;
         }
     }
 }
-void recipes(vector<string> IDs){ 
-    for (int i=0; i < IDs.size() - 1; i++) { 
-        findRecipeById(IDs[i]); 
+
+void recipes(const vector<string>& IDs) {
+    for (const auto& id : IDs) {
+        findRecipeById(id);
     }
 }
 
-
-
- void ingredient::recipefunc(){ 
+void ingredient::recipefunc() {
     ifstream file("Ingredients-Only.csv");
     if (!file.is_open()) {
-        std::cout << "Failed to open file." << std::endl;
+        cout << "Failed to open file." << endl;
+        return;
     }
 
     string line;
-    std::vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
+    vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
 
     // Skip the header
     getline(file, line);
 
-    std::vector<string> IDs;
+    vector<string> IDs;
     while (getline(file, line)) {
-        std::istringstream lineStream(line);
-        std::string cell;
-        std::unordered_set<string> recipeIngredients;
+        istringstream lineStream(line);
+        string cell;
+        unordered_set<string> recipeIngredients;
 
         // Read until the ingredients field (assuming index 1)
         getline(lineStream, cell, ','); // Skip the ID
@@ -184,7 +194,7 @@ void recipes(vector<string> IDs){
 
         // Remove the enclosing brackets
         cell = cell.substr(1, cell.size() - 2);
-        std::istringstream cellStream(cell);
+        istringstream cellStream(cell);
         string ingredient1;
 
         while (getline(cellStream, ingredient1, ',')) {
@@ -193,61 +203,62 @@ void recipes(vector<string> IDs){
         }
 
         if (containsAllIngredients(recipeIngredients, searchIngredientsSet)) {
-            std::istringstream idStream(line);
+            istringstream idStream(line);
             string id;
             getline(idStream, id, ','); // Assuming the first column is the ID
-            IDs.push_back(id); 
+            IDs.push_back(id);
         }
     }
- file.close();
+    file.close();
 
     if (!IDs.empty()) {
-
-    // Convert vector to a set for efficient ID checking
-    unordered_set<string> idSet(IDs.begin(), IDs.end());
-
-    // Open output file once
-    ofstream output("recipes.txt", ios::app);
-
-    // Open the CSV file once
-    ifstream file("RAW_recipes.csv");
-    if (!file.is_open()) {
-        cout << "Failed to open file." << endl;
-        return;
-    }
-
-    string line;
-    bool headerSkipped = false;
-
-    // Read each line of the CSV file
-    while (getline(file, line)) {
-        if (!headerSkipped) {  // Skip the header line
-            headerSkipped = true;
-            continue;
+        unordered_set<string> idSet(IDs.begin(), IDs.end());
+        ofstream output("recipes.txt", ios::app);
+        ifstream file("RAW_recipes.csv");
+        if (!file.is_open()) {
+            cout << "Failed to open file." << endl;
+            return;
         }
 
-        vector<string> columns = split(line, ',');
-        if (columns.size() < 9) continue;  // Ensure there are enough columns
+        bool headerSkipped = false;
+        while (getline(file, line)) {
+            if (!headerSkipped) {  // Skip the header line
+                headerSkipped = true;
+                continue;
+            }
 
-        // Clean the ID from quotes if present
-        string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
+            vector<string> columns = split(line, ',');
+            if (columns.size() < 9) continue;  // Ensure there are enough columns
 
-        // Check if the current row's ID is in the set of IDs we're interested in
-        if (idSet.find(cleanId) != idSet.end()) {
-            string recipe_name = columns[0];
-            string time2cook = columns[2];
-            string steps = columns[8];
-            output << "Recipe name: " << recipe_name << ", Time to cook: " << time2cook << ", Total steps to cook: " << steps << endl;
+            string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
+
+            if (idSet.find(cleanId) != idSet.end()) {
+                string recipe_name = columns[0];
+                string time2cook = columns[2];
+                string steps = columns[8];
+                output << "Recipe name: " << recipe_name << ", Time to cook: " << time2cook << ", Total steps to cook: " << steps << endl;
+            }
         }
+        file.close();
+        output.close();
+    } else {
+        cout << "Recipe not found." << endl;
     }
-
-    file.close();
-    output.close();
-}
-    else {
-        std::cout << "Recipe not found." << std::endl;
-    }
-
-    file.close();
 }
 
+int populateRecipies() {
+    populateIngredients();
+    ingredient::recipefunc();
+    return 1;
+}
+
+Napi::Number populateRecipiesWrapped(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    Napi::Number returnValue = Napi::Number::New(env, populateRecipies());
+    return returnValue;
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+    exports.Set("populateRecipies", Napi::Function::New(env, populateRecipiesWrapped));
+    return exports;
+}
