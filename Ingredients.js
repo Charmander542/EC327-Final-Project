@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Access the submit button and add event listener
   document.getElementById('ingredient_submit').addEventListener('click', function () {
+    event.preventDefault();
     var date = new Date(document.getElementById("ingredient_date").value);
     var day = date.getDate();
     var month = date.getMonth() + 1; // JavaScript months are 0-11
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const newIngredient = {
       name: document.getElementById("ingredient_name").value,
       quantity: document.getElementById("ingredient_quantity").value,
-      importance: document.getElementById("ingredient_importance").value,
+      importance: 1,
       day: day,
       month: month,
       year: year
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add the new ingredient to the list
     ingredientsData.push(newIngredient);
+    //console.log(ingredientsData);
 
     // Update the ingredients file
     updateIngredientsFile(ingredientsData);
