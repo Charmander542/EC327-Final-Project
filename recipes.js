@@ -38,10 +38,9 @@ document.getElementById('data').addEventListener('click', function() {
     const { populateRecipies } = require('./cpp-backend/build/Release/addon.node');
 
     // Calling functions of native addon
-    var result = populateRecipies(); //TODO add a pass for the nonos
+    var result = populateRecipies();
 
-    document.getElementById('tag_result').innerHTML =
-      "C++ Native addon populateRecipies() result (IPC): " + result;
+
 
     // Load existing recipes after populating
     readRecipesFile(function(recipesData) {
