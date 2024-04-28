@@ -21,7 +21,7 @@ function readRecipesFile(callback) {
     const recipesData = [];
     lines.forEach((line, index) => {
       if (index !== 0) { // Skip the header line
-        const [name, quantity, importance, day, month, year] = line.split(' ');
+        const [name, quantity, importance, day, month, year] = line.split('~');
         recipesData.push({ name, quantity, importance, day, month, year });
       }
     });
