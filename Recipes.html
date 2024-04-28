@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link rel="stylesheet" href="style.css"> </link>
-    <title>Hungry Hippos!</title>
-  </head>
-  <body>
+    <link rel="stylesheet" href="style.css">
+    <title>Recipes - Hungry Hippos</title>
+</head>
+<body>
     <div class="navbar">
-      <a href="index.html"><button>Home</button></a>
-      <a href="Ingredients.html"><button>Ingredients</button></a>
-      <a href="Recipes.html"><button>Recipies</button></a>
-      <a href="Profile.html"><button>Profile</button></a>
+        <a href="index.html"><button>Home</button></a>
+        <a href="Ingredients.html"><button>Ingredients</button></a>
+        <a href="Recipes.html"><button>Recipies</button></a>
+        <a href="Profile.html"><button>Profile</button></a>
     </div>
-    <button id="data" type="submit">Get Recipies</button>
-    <h1 id="tag_result"></h1> 
-    <ul id="recipes" class="recipes-list">
-      <!-- Ingredients list will be populated here -->
-  </ul>
-  <script type="module" src="recipes.js"></script>
-  </body>
+    <div class="profile-container">
+        <h1 class="profile-title">Recipes</h1>
+        <div class="profile-form">
+            <button id="data" type="submit" class="submit-btn">Get Recipes</button>
+            <h1 id="tag_result"></h1> 
+            <ul id="recipes" class="recipes-list">
+                <!-- Recipes list will be populated here -->
+            </ul>
+        </div>
+    </div>
+    <script type="module" src="recipes.js"></script>
+</body>
 </html>

@@ -1,38 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <link rel="stylesheet" href="style.css"> </link>
+    <link rel="stylesheet" href="style.css">
     <title>Hungry Hippos!</title>
-  </head>
-  <body>
+</head>
+<body>
     <div class="navbar">
-      <a href="index.html"><button>Home</button></a>
-      <a href="Ingredients.html"><button>Ingredients</button></a>
-      <a href="Recipes.html"><button>Recipies</button></a>
-      <a href="Profile.html"><button>Profile</button></a>
+        <a href="index.html"><button>Home</button></a>
+        <a href="Ingredients.html"><button>Ingredients</button></a>
+        <a href="Recipes.html"><button>Recipies</button></a>
+        <a href="Profile.html"><button>Profile</button></a>
     </div>
-    <h1>Hungry Hippos!</h1>
-    We are using Node.js<span id="node-version"></span>,
-    Chromium<span id="chrome-version"></span>,
-    and Electron<span id="electron-version"></span>.
-  <!-- 
-    <p>
-      <p>
-        <h3>First Number</h3>
-        <p>Test</p>
-        <input id="first_number" type="number"></input>
-        <h3>Second Number</h3>
-        <input id="second_number" type="number"></input>
-      </p>
-      <button id="submit" type="submit">Submit</button>
-      <h1 id="tag_result"></h1>  
-    </p>
--->
-    <!-- You can also require other files to run in this process -->
+    <div class="profile-container">
+        <h1 class="profile-title">Welcome to Hungry Hippos!</h1>
+        <div class="profile-form">
+            <p>We are using Node.js<span id="node-version"></span>,
+            Chromium<span id="chrome-version"></span>,
+            and Electron<span id="electron-version"></span>.</p>
+        </div>
+    </div>
     <script src="./renderer.js"></script>
-  </body>
+</body>
 </html>
