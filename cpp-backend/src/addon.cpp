@@ -183,7 +183,7 @@ string cleanSteps(string steps){
     string clean_steps=" (1) ";
     clean_steps+=toupper(steps[index]);
     index++;
-    while(index < steps.size()){
+    while(index < steps.size()-1){
         if(steps[index]=='\''){
             index+=4; //skip ' ,'
             clean_steps=clean_steps+ ".\n ("+to_string(step_number)+") "; 
