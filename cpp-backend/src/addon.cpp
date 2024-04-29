@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 #include <unordered_set>
+#include <cctype> //used for capitizing strings via toupper()
+
 
 using namespace std;
 
@@ -168,6 +170,58 @@ void recipes(const vector<string>& IDs) {
         findRecipeById(id);
     }
 }
+
+//////////////////////////////////////////
+//helper methods to clean recipe.txt input
+string cleanName(string name){
+    name[0]=toupper(name[0]);
+    for (int i=1;i<name.size();i++){
+        if (name[i-1]==' '){
+            name[i]=toupper(name[i]);
+        }
+    }
+    return name;
+}
+string cleanCookTime(string cooktime){
+    return cooktime+" minutes";
+}
+/*expected output example:
+(1) Preheat oven to 475 F.
+(2) Cut carrots.
+*/
+string cleanSteps(string steps){
+    steps=steps.substr(1, steps.size() - 2); //remove brackets
+    unsigned int index=1; //skip first '
+    unsigned int step_number=2;
+    string clean_steps=" (1) ";
+    clean_steps+=toupper(steps[index]);
+    index++;
+    while(index < steps.size()){
+        if(steps[index]=='\''){
+            index+=4; //skip ' ,'
+            clean_steps=clean_steps+ ".\n ("+to_string(step_number)+") "; 
+            while(steps[index]==' '){ //ignore more spaces
+                index++;
+            }
+            clean_steps+=toupper(steps[index]); //capitalize first character of next line
+            step_number++;
+        }else if (steps[index]==' ' && steps[index+1]==','){
+            clean_steps+=','; //skip annoying extra spaces before commas
+            index++;
+        }else if(steps[index-1]=='.'){
+            clean_steps+=toupper(steps[index]);
+          
+        } else{
+            clean_steps+=steps[index];
+        }
+
+        index++;
+
+        
+    }
+    return clean_steps;
+}
+//////////////////////////////////////
 
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
