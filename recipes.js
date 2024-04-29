@@ -4,7 +4,7 @@ const { ipcRenderer } = require('electron');
 // Function to update the recipes text file
 function updateRecipesFile(updatedRecipes) {
   const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.timeToCook} ${recipe.steps}`).join('\n');
-  fs.writeFile('./cpp-backend/src/recipes.txt', data, err => {
+  fs.writeFile('recipes.txt', data, err => {
     if (err) {
       console.error('Error writing to recipes.txt:', err);
     } else {
@@ -15,7 +15,7 @@ function updateRecipesFile(updatedRecipes) {
 
 // Function to read the recipes file
 function readRecipesFile(callback) {
-  fs.readFile('./cpp-backend/src/recipes.txt', 'utf8', (err, data) => {
+  fs.readFile('recipes.txt', 'utf8', (err, data) => {
     if (err) throw err;
     const lines = data.split('\n');
     const recipesData = [];
