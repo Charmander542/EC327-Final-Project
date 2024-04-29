@@ -15,6 +15,9 @@ using namespace std;
 
 vector<string> ingredients;
 
+    //Ingredients Profile Code: Lines 18-479
+
+//Constructor for Ingredients
 ingredient::ingredient(string ingredient_name, string quantity, int importance, int day, int month, int year) {
     tm date = {};  // Initialize to zero
     date.tm_mday = day;
@@ -33,7 +36,7 @@ ingredient::ingredient(string ingredient_name, string quantity, int importance, 
     ingredients.push_back(ingredient_name);
 }
 
-
+//Loads ingredients into arrays
 void populateIngredients() {
     ingredients.clear();
     ifstream input("ingredients.txt");
@@ -60,6 +63,8 @@ void populateIngredients() {
 
     input.close();  // Close the file stream
 }
+
+//clears the text files
 void ingredient::clear() {
     ofstream output("ingredients.txt");
     output << "";
@@ -69,6 +74,7 @@ void ingredient::clear() {
     output.close();
 }
 
+//removes an ingredient from the list
 int ingredient::remove_ingredient(const string name) {
     ifstream input("ingredients.txt");
     ofstream tempout("temp.txt");
@@ -96,6 +102,7 @@ int ingredient::remove_ingredient(const string name) {
     return 0;
 }
 
+//Tracks an ingredient's expiration date and sets it as expired when it expires
 void ingredient::expired() {
     time_t today = time(0);
     ifstream input("ingredients.txt");
@@ -117,6 +124,7 @@ void ingredient::expired() {
     rename("temp.txt", "ingredients.txt");
 }
 
+//Helps display text in a readable form
 string trim(const string& str) {
     size_t first = str.find_first_not_of(" \t\n\r\f\v'\"");
     if (string::npos == first) {
@@ -126,6 +134,7 @@ string trim(const string& str) {
     return str.substr(first, (last - first + 1));
 }
 
+//Checks if a recipe contains the ingredients we want it to have
 bool containsAllIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& searchIngredients) {
     for (const auto& ing : searchIngredients) {
         if (recipeIngredients.find(ing) == recipeIngredients.end()) {
@@ -135,6 +144,7 @@ bool containsAllIngredients(const unordered_set<string>& recipeIngredients, cons
     return true;
 }
 
+//Helps display text in a readable form
 vector<string> split(const string &s, char delimiter) {
     vector<string> tokens;
     string token;
@@ -169,6 +179,7 @@ string cleanName(string name){
     }
     return name;
 }
+//Helps display text in a readable form
 string cleanCookTime(string cooktime){
     return cooktime+" minutes";
 }
@@ -176,6 +187,7 @@ string cleanCookTime(string cooktime){
 (1) Preheat oven to 475 F.
 (2) Cut carrots.
 */
+//Helps display text in a readable form
 string cleanSteps(string steps){
     steps=steps.substr(1, steps.size() - 2); //remove brackets
     unsigned int index=1; //skip first '
@@ -209,7 +221,7 @@ string cleanSteps(string steps){
     return clean_steps;
 }
 //////////////////////////////////////
-//Justin Wrote some Code (lines 210-291, 297-300, after the && on 337 and the header line) here to make the noNos work, Charlie please erase it if it doesn't work
+//Creates a Vector of food restrictions based on profile
 vector<string> noNoIngredients;
 void populateNoNos(profile p1){
     noNoIngredients.clear();
@@ -292,6 +304,8 @@ void populateNoNos(profile p1){
         noNoIngredients.push_back("peanut");
     }
 }
+
+//Checks to make sure the recipe doesn't contain food restrictions
 bool doesNotContainNoNoIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& noNoIngredients) {
     for (const auto& ing : noNoIngredients) {
         for (const auto& recipeIng : recipeIngredients) {
@@ -303,6 +317,7 @@ bool doesNotContainNoNoIngredients(const unordered_set<string>& recipeIngredient
     return true;
 }
 
+//Generates the recipe based on the ingredients and food restrictions entered
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
@@ -453,12 +468,16 @@ int populateRecipes() {
     ingredient::recipefunc();
     return 1;
 }
+
+//Wrapper Function for JavaScript 
 Napi::Number populateRecipesWrapped(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     Napi::Number returnValue = Napi::Number::New(env, populateRecipes());
     return returnValue;
 }
 
+
+    //Code for the Profile Class: lines 480-end
 
 //Constructor with arguments, saving the users and reading from the file "users.cpp"
 profile::profile(string name, int noNo){
