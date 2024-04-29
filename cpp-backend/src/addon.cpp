@@ -207,12 +207,97 @@ string cleanSteps(string steps){
     return clean_steps;
 }
 //////////////////////////////////////
+//Justin Wrote some Code (lines 210-291, 297-300, after the && on 337 and the header line) here to make the noNos work, Charlie please erase it if it doesn't work
+vector<string> noNoIngredients;
+void populateNoNos(profile p1){
+    noNoIngredients.clear();
+    if(p1.noNos[0]){
+        noNoIngredients.push_back("Beef");
+        noNoIngredients.push_back("Pork");
+        noNoIngredients.push_back("Chicken");
+        noNoIngredients.push_back("Turkey");
+        noNoIngredients.push_back("Salmon");
+        noNoIngredients.push_back("Tuna");
+    }
+    if(p1.noNos[1]){
+        noNoIngredients.push_back("Beef");
+        noNoIngredients.push_back("Pork");
+        noNoIngredients.push_back("Chicken");
+        noNoIngredients.push_back("Turkey");
+        noNoIngredients.push_back("Salmon");
+        noNoIngredients.push_back("Tuna");
+        noNoIngredients.push_back("Yoghurt");
+        noNoIngredients.push_back("Cheese");
+        noNoIngredients.push_back("Milk");
+    }
+    if(p1.noNos[2]){
+        noNoIngredients.push_back("Wine");
+        noNoIngredients.push_back("Gin");
+    }
+    if(p1.noNos[3]){
+        noNoIngredients.push_back("Pasta");
+        noNoIngredients.push_back("Bread");
+        noNoIngredients.push_back("Tortilla");
+    }
+    if(p1.noNos[4]){
+        noNoIngredients.push_back("Cheese");
+        noNoIngredients.push_back("Milk");
+        noNoIngredients.push_back("Yoghurt");
+        noNoIngredients.push_back("Butter");
+    }
+    if(p1.noNos[5]){
+        noNoIngredients.push_back("Eggs");
+    }
+    if(p1.noNos[6]){
+        noNoIngredients.push_back("Soy");
+    }
+    if(p1.noNos[7]){
+        noNoIngredients.push_back("Wheat");
+    }
+    if(p1.noNos[8]){
+        noNoIngredients.push_back("Tuna");
+        noNoIngredients.push_back("Salmon");
+        noNoIngredients.push_back("Trout"); 
+        noNoIngredients.push_back("Cod");
+        noNoIngredients.push_back("Haddock");
+        noNoIngredients.push_back("Swordfish");
+    }
+    if(p1.noNos[9]){
+        noNoIngredients.push_back("Lobster");
+        noNoIngredients.push_back("Shrimp");
+        noNoIngredients.push_back("Crab");
+    }
+    if(p1.noNos[10]){
+        noNoIngredients.push_back("Hazelnut");
+        noNoIngredients.push_back("Walnut");
+        noNoIngredients.push_back("Chestnut");
+        noNoIngredients.push_back("Almond");
+        noNoIngredients.push_back("Cashew");
+        noNoIngredients.push_back("Macademia");
+        noNoIngredients.push_back("Pecan");
+        noNoIngredients.push_back("Pistachio");
+    }
+    if(p1.noNos[11]){
+        noNoIngredients.push_back("Peanut");
+    }
+}
+bool doesNotContainNoNoIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& noNoIngredients) {
+    for (const auto& ing : noNoIngredients) {
+        if (recipeIngredients.find(ing) != recipeIngredients.end()) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
+    
     profile p = loadLastProfile();
-    p.noNos; 
+    populateNoNos(p);
+    std::vector<string> searchNoNosSet(noNoIngredients.begin(), noNoIngredients.end());
+
     /*
     for (int i=0; i++; i < 12){ 
         cout << "p.noNos[" << i << "] = " << (p.noNos[i] ? "true" : "false") << endl;
@@ -249,7 +334,7 @@ void ingredient::recipefunc() {
             recipeIngredients.insert(ingredient1);
         }
 
-        if (containsAllIngredients(recipeIngredients, searchIngredientsSet)) {
+        if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
             std::istringstream idStream(line);
             string id;
             getline(idStream, id, ','); // Assuming the first column is the ID
