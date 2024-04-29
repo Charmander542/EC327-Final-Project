@@ -3,6 +3,6 @@ build
 .vscode
 RAW_recipes.csv
 Ingredients-Only.csv
-resipes.txt
+recipes.txt
 ingredients.txt
 out/
