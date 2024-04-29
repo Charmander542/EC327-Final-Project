@@ -137,6 +137,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: grab;
   }
   
   .ingredient dt {
@@ -262,4 +263,13 @@ body {
   float: right;
   font-size: 1.5em;
   cursor: pointer;
+}
+
+.ingredient.dragging {
+  opacity: 0.5; /* Make the dragging ingredient semi-transparent */
+}
+
+/* Added styles for drop target */
+.ingredient.drop-target {
+  border: 2px dashed #aaa; /* Dashed border to indicate drop target */
 }

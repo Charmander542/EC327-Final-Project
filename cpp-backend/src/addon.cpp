@@ -314,14 +314,8 @@ void ingredient::recipefunc() {
     /*for (int i=0; i < 12; i++){ 
         cout << "p.noNos[" << i << "] = " << (p.noNos[i] ? "true" : "false") << endl;
     }*/
-    
-    ifstream file("Ingredients-Only.csv");
-    if (!file.is_open()) {
-        std::cout << "Failed to open file." << std::endl;
-    }
 
-    string line;
-    std::vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
+    vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
 
     searchIngredientsSet.erase( //remove nonos from the pantry search
         remove_if(searchIngredientsSet.begin(), searchIngredientsSet.end(), 
@@ -337,98 +331,115 @@ void ingredient::recipefunc() {
         cout << ingredient << "\n";
     }
     cout << "All nonos:\n";
-        for (const auto& ingredient : searchNoNosSet) {
-            cout << ingredient << "\n";
-        }
-    // Skip the header
-    getline(file, line);
+    for (const auto& ingredient : searchNoNosSet) {
+        cout << ingredient << "\n";
+    }
 
     std::vector<string> IDs;
-    while (getline(file, line) && num_recipes_generated<MAX_RECIPES_GENERATED) {
-        std::istringstream lineStream(line);
-        std::string cell;
-        std::unordered_set<string> recipeIngredients;
-
-        // Read until the ingredients field (assuming index 1)
-        getline(lineStream, cell, ','); // Skip the ID
-        getline(lineStream, cell); // Read the full ingredient list
-
-        // Remove the enclosing brackets
-        cell = cell.substr(1, cell.size() - 2);
-        std::istringstream cellStream(cell);
-        string ingredient1;
-
-        while (getline(cellStream, ingredient1, ',')) {
-            ingredient1 = trim(ingredient1); // Trim spaces and single quotes
-            recipeIngredients.insert(ingredient1);
-        }
-        if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
-            std::istringstream idStream(line);
-            string id;
-            getline(idStream, id, ','); // Assuming the first column is the ID
-            IDs.push_back(id);
-            num_recipes_generated++; 
-        }
-    }
-    file.close();
-
-    cout << IDs.size() << endl;
-
-
-    if (!IDs.empty()) {
-        unordered_set<string> idSet(IDs.begin(), IDs.end());
-        ofstream output("recipes.txt");
-        ifstream file("RAW_recipes.csv");
-        //cout << "writing" << endl;
+    while(!searchIngredientsSet.empty()){
+        ifstream file("Ingredients-Only.csv");
         if (!file.is_open()) {
-            cout << "Failed to open file." << endl;
-            return;
+            std::cout << "Failed to open file." << std::endl;
         }
 
-        bool headerSkipped = false;
+        string line;
+        // Skip the header
+        getline(file, line);
+        while (getline(file, line) && num_recipes_generated<MAX_RECIPES_GENERATED) {
+            std::istringstream lineStream(line);
+            std::string cell;
+            std::unordered_set<string> recipeIngredients;
 
-     
-        
-        //old while loop that only saves recipe name, time to cook ,total steps to cook.
-        num_recipes_generated = 0;
-        while (getline(file, line)) {
-            if(num_recipes_generated==MAX_RECIPES_GENERATED){
-                break;
+            // Read until the ingredients field (assuming index 1)
+            getline(lineStream, cell, ','); // Skip the ID
+            getline(lineStream, cell); // Read the full ingredient list
+
+            // Remove the enclosing brackets
+            cell = cell.substr(1, cell.size() - 2);
+            std::istringstream cellStream(cell);
+            string ingredient1;
+
+            while (getline(cellStream, ingredient1, ',')) {
+                ingredient1 = trim(ingredient1); // Trim spaces and single quotes
+                recipeIngredients.insert(ingredient1);
             }
-            if (!headerSkipped) {  // Skip the header line
-                headerSkipped = true;
-                continue;
-            }
-
-            vector<string> columns = split(line, ',');
-            if (columns.size() < 9) continue;  // Ensure there are enough columns
-
-            string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
-
-            //idSet contains the recipes that were found as matches
             
-            //columns of RAW_recipes.csv:
-            //name	id	minutes	contributor_id	submitted	tags	nutrition	n_steps	steps	description	ingredients	n_ingredients
+            if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
+                std::istringstream idStream(line);
+                string id;
+                getline(idStream, id, ','); // Assuming the first column is the ID
+                IDs.push_back(id);
+                num_recipes_generated++; 
+            }
+            
+        }
+        file.close();
 
-            if (idSet.find(cleanId) != idSet.end()) {
-                string recipe_name = columns[0];
-                string time2cook = columns[2];
-                string steps = columns[8];
-                recipe_name=cleanName(recipe_name);
-                time2cook = cleanCookTime(time2cook);
-                steps=cleanSteps(steps);
-                output << recipe_name << "~" << time2cook << "~" << steps << endl;
+        cout << IDs.size() << endl;
+
+
+        if (!IDs.empty()) {
+            unordered_set<string> idSet(IDs.begin(), IDs.end());
+            ofstream output("recipes.txt");
+            ifstream file("RAW_recipes.csv");
+            //cout << "writing" << endl;
+            if (!file.is_open()) {
+                cout << "Failed to open file." << endl;
+                return;
+            }
+
+            bool headerSkipped = false;
+
+        
+            
+            //old while loop that only saves recipe name, time to cook ,total steps to cook.
+            num_recipes_generated = 0;
+            while (getline(file, line)) {
+                if(num_recipes_generated==MAX_RECIPES_GENERATED){
+                    break;
+                }
+                if (!headerSkipped) {  // Skip the header line
+                    headerSkipped = true;
+                    continue;
+                }
+
+                vector<string> columns = split(line, ',');
+                if (columns.size() < 9) continue;  // Ensure there are enough columns
+
+                string cleanId = columns[1].erase(0, columns[1].find_first_not_of('\"'));
+
+                //idSet contains the recipes that were found as matches
+                
+                //columns of RAW_recipes.csv:
+                //name	id	minutes	contributor_id	submitted	tags	nutrition	n_steps	steps	description	ingredients	n_ingredients
+
+                if (idSet.find(cleanId) != idSet.end()) {
+                    string recipe_name = columns[0];
+                    string time2cook = columns[2];
+                    string steps = columns[8];
+                    recipe_name=cleanName(recipe_name);
+                    time2cook = cleanCookTime(time2cook);
+                    steps=cleanSteps(steps);
+                    output << recipe_name << "~" << time2cook << "~" << steps << endl;
+                }
+            }
+            
+            file.close();
+            output.close();
+            return;
+        }else if(searchIngredientsSet.empty()){
+            ofstream output("recipes.txt");
+            output << "Recipe Not Found" << "~" << "N/A" << "~" << "Recipe not Found" << endl;
+            output.close();
+            
+            cout << "Recipe not found." << endl;
+        }else{
+            searchIngredientsSet.pop_back();
+            cout << "Remaining ingredients after removal:\n";
+            for (const auto& ingredient : searchIngredientsSet) {
+                cout << ingredient << "\n";
             }
         }
-        
-        file.close();
-        output.close();
-    } else {
-         ofstream output("recipes.txt");
-         output << "Recipe Not Found" << "~" << "N/A" << "~" << "Recipe not Found" << endl;
-         output.close();
-        
-       cout << "Recipe not found." << endl;
     }
 }
 
