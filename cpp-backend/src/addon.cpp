@@ -7,7 +7,8 @@
 #include <sstream>
 #include <vector>
 #include <unordered_set>
-#include <cctype> //used for capitizing strings via toupper()
+#include <algorithm>
+#include <cctype> 
 
 
 using namespace std;
@@ -52,6 +53,7 @@ void populateIngredients() {
         istringstream iss(line);
         string ingredient_name;
         iss >> ingredient_name;  // Extract the first word from the line
+        transform(ingredient_name.begin(), ingredient_name.end(), ingredient_name.begin(), ::tolower);
         ingredients.push_back(ingredient_name);  // Store the ingredient name
         cout << "Ingredient added: " << ingredient_name << endl;  // Optional: Output for confirmation
     }
@@ -334,7 +336,7 @@ void ingredient::recipefunc() {
             recipeIngredients.insert(ingredient1);
         }
 
-        if (!containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
+        if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
             std::istringstream idStream(line);
             string id;
             getline(idStream, id, ','); // Assuming the first column is the ID
