@@ -3,7 +3,7 @@ const fs = require('fs');
 // Function to update the ingredients text file
 function updateIngredientsFile(updatedIngredients) {
   const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedIngredients.map(ingredient => `${ingredient.name} ${ingredient.quantity} ${ingredient.importance} ${ingredient.day} ${ingredient.month} ${ingredient.year}`).join('\n');
-  fs.writeFile('./cpp-backend/src/ingredients.txt', data, err => {
+  fs.writeFile('ingredients.txt', data, err => {
     if (err) {
       console.error('Error writing to ingredients.txt:', err);
     } else {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let ingredientsData = [];
 
   // Load existing ingredients
-  fs.readFile('./cpp-backend/src/ingredients.txt', 'utf8', (err, data) => {
+  fs.readFile('ingredients.txt', 'utf8', (err, data) => {
     if (err) throw err;
     const lines = data.split('\n');
     lines.forEach((line, index) => {
