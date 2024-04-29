@@ -441,6 +441,11 @@ void ingredient::recipefunc() {
             }
         }
     }
+    ofstream output("recipes.txt");
+    output << "Recipe Not Found" << "====" << "N/A" << "====" << "Recipe not Found" << endl;
+    output.close();
+    
+    cout << "Recipe not found." << endl;
 }
 
 int populateRecipes() {
