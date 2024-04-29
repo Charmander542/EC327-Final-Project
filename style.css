@@ -179,6 +179,7 @@ body {
     padding: 20px; /* Add padding to the content */
     max-width: 600px; /* Limit content width for readability */
     border-radius: 5px; /* Rounded corners for the content */
+    overflow-y: auto; /* Enables vertical scrolling */
   }
   
   .close-popup {
@@ -189,7 +190,12 @@ body {
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
+    position: fixed; /* Or `absolute` depending on layout */
+    top: 20px;
+    right: 20px;
+    z-index: 1050; /* Ensure it's above other elements */
   }
+
   
   /* Styling for recipe titles */
 .recipe h3 {

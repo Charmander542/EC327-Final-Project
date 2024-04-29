@@ -14,6 +14,7 @@ function updateRecipesFile(updatedRecipes) {
 }
 
 // Function to read the recipes file
+/*
 function readRecipesFile(callback) {
   fs.readFile('recipes.txt', 'utf8', (err, data) => {
     if (err) throw err;
@@ -24,6 +25,35 @@ function readRecipesFile(callback) {
         const [name,timeToCook,steps] = line.split('~');
         recipesData.push({ name,timeToCook,steps });
     });
+    callback(recipesData);
+  });
+}
+*/
+function readRecipesFile(callback) {
+  fs.readFile('recipes.txt', 'utf8', (err, data) => {
+    if (err) throw err;
+    const lines = data.split('\n');
+    const recipesData = [];
+    let currentRecipe = null;
+
+    lines.forEach((line, index) => {
+      if (line.trim() === '') return; // Skip empty lines
+      
+      if (line.includes('~')) { // Check for start of a new recipe
+        if (currentRecipe) {
+          recipesData.push(currentRecipe); // Push the last completed recipe
+        }
+        const [name, timeToCook, steps] = line.split('~');
+        currentRecipe = { name, timeToCook, steps: [steps.trim()] }; // Start a new recipe
+      } else if (currentRecipe) {
+        currentRecipe.steps.push(line.trim()); // Continue adding steps to the current recipe
+      }
+    });
+
+    if (currentRecipe) {
+      recipesData.push(currentRecipe); // Push the last recipe if exists
+    }
+    
     callback(recipesData);
   });
 }
@@ -71,8 +101,8 @@ function renderRecipes(recipesData) {
     button.innerText = 'View Instructions';
     button.className = 'view-instructions-button';
     button.addEventListener('click', () => {
-      // Read instructions from file and open popup
-      openPopup(steps);
+      const fullInstructions = recipe.steps.join('<br>'); // Join all steps with line breaks for HTML display
+      openPopup(fullInstructions);
     });
 
     // Append button to recipe item
@@ -81,6 +111,7 @@ function renderRecipes(recipesData) {
     recipesList.appendChild(recipeItem);
   });
 }
+
 
 function openPopup(instructions) {
   // Create a popup element
