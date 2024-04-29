@@ -298,12 +298,12 @@ void ingredient::recipefunc() {
     populateNoNos(p);
     std::vector<string> searchNoNosSet(noNoIngredients.begin(), noNoIngredients.end());
 
-    /*
-    for (int i=0; i++; i < 12){ 
+    
+    /*for (int i=0; i < 12; i++){ 
         cout << "p.noNos[" << i << "] = " << (p.noNos[i] ? "true" : "false") << endl;
-    }
-    */
-        ifstream file("/Users/dltc2020/Documents/EC327-Final-Project/cpp-backend/src/Ingredients-Only.csv");
+    }*/
+    
+    ifstream file("Ingredients-Only.csv");
     if (!file.is_open()) {
         std::cout << "Failed to open file." << std::endl;
     }
@@ -315,7 +315,7 @@ void ingredient::recipefunc() {
     getline(file, line);
 
     std::vector<string> IDs;
-    while (getline(file, line)) {
+    while (getline(file, line) && num_recipes_generated<MAX_RECIPES_GENERATED) {
         std::istringstream lineStream(line);
         std::string cell;
         std::unordered_set<string> recipeIngredients;
@@ -334,14 +334,15 @@ void ingredient::recipefunc() {
             recipeIngredients.insert(ingredient1);
         }
 
-        if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
+        if (!containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
             std::istringstream idStream(line);
             string id;
             getline(idStream, id, ','); // Assuming the first column is the ID
-            IDs.push_back(id); 
+            IDs.push_back(id);
+            num_recipes_generated++; 
         }
     }
- file.close();
+    file.close();
 
     cout << IDs.size() << endl;
 
@@ -349,7 +350,8 @@ void ingredient::recipefunc() {
     if (!IDs.empty()) {
         unordered_set<string> idSet(IDs.begin(), IDs.end());
         ofstream output("recipes.txt");
-        ifstream file("/Users/dltc2020/Documents/EC327-Final-Project/cpp-backend/src/RAW_recipes.csv");
+        ifstream file("RAW_recipes.csv");
+        //cout << "writing" << endl;
         if (!file.is_open()) {
             cout << "Failed to open file." << endl;
             return;
@@ -360,7 +362,7 @@ void ingredient::recipefunc() {
      
         
         //old while loop that only saves recipe name, time to cook ,total steps to cook.
-         
+        num_recipes_generated = 0;
         while (getline(file, line)) {
             if(num_recipes_generated==MAX_RECIPES_GENERATED){
                 break;

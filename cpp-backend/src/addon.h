@@ -23,12 +23,6 @@ public:
     static int remove_ingredient(const string name);
 };
 
-int populateRecipies();
-void populateIngredients();
-void populateNoNos(profile); //Justin added this line, remove it if needed
-
-Napi::Number populateRecipiesWrapped(const Napi::CallbackInfo& info);
-
 class profile {
     public:
         string name;
@@ -45,6 +39,11 @@ class profile {
 
 };
 
+
+int populateRecipies();
+void populateIngredients();
+Napi::Number populateRecipiesWrapped(const Napi::CallbackInfo& info);
+void populateNoNos(profile); //Justin added this line, remove it if needed
 
 int array2int(bool array[12]);
 bool* integer2array(int num);
