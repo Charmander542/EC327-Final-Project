@@ -1,7 +1,7 @@
 node_modules
 build
 .vscode
-cpp-backend/src/RAW_recipes.csv
-cpp-backend/src/Ingredients-Only.csv
-
+RAW_recipes.csv
+Ingredients-Only.csv
+resipes.txt
 out/
