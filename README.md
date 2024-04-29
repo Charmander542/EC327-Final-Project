@@ -7,7 +7,7 @@
 ```bash
 # Go into the backend folder
 cd cpp-backend
-# Run Instal
+# Run Install
 npm install
 # Move back to the main folder
 cd ..
