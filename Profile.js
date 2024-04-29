@@ -14,40 +14,40 @@ document.getElementById('profile_submit').addEventListener('click', function() {
         let bitPosition = 0;
         switch (checkbox.value) {
             case "Vegetarian":
-                bitPosition = 0;
+                bitPosition = 11;
                 break;
             case "Vegan":
-                bitPosition = 1;
-                break;
-            case "Alcohol-Free":
-                bitPosition = 2;
-                break;
-            case "Gluten":
-                bitPosition = 3;
-                break;
-            case "Dairy":
-                bitPosition = 4;
-                break;
-            case "Eggs":
-                bitPosition = 5;
-                break;
-            case "Soy":
-                bitPosition = 6;
-                break;
-            case "Wheat":
-                bitPosition = 7;
-                break;
-            case "Fish":
-                bitPosition = 8;
-                break;
-            case "Shellfish":
-                bitPosition = 9;
-                break;
-            case "Tree Nuts":
                 bitPosition = 10;
                 break;
+            case "Alcohol-Free":
+                bitPosition = 9;
+                break;
+            case "Gluten":
+                bitPosition = 8;
+                break;
+            case "Dairy":
+                bitPosition = 7;
+                break;
+            case "Eggs":
+                bitPosition = 6;
+                break;
+            case "Soy":
+                bitPosition = 5;
+                break;
+            case "Wheat":
+                bitPosition = 4;
+                break;
+            case "Fish":
+                bitPosition = 3;
+                break;
+            case "Shellfish":
+                bitPosition = 2;
+                break;
+            case "Tree Nuts":
+                bitPosition = 1;
+                break;
             case "Peanuts":
-                bitPosition = 11;
+                bitPosition = 0;
                 break;
             // Add more cases for additional checkboxes if needed
         }

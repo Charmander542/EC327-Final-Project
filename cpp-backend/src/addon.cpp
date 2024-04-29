@@ -214,79 +214,90 @@ vector<string> noNoIngredients;
 void populateNoNos(profile p1){
     noNoIngredients.clear();
     if(p1.noNos[0]){
-        noNoIngredients.push_back("Beef");
-        noNoIngredients.push_back("Pork");
-        noNoIngredients.push_back("Chicken");
-        noNoIngredients.push_back("Turkey");
-        noNoIngredients.push_back("Salmon");
-        noNoIngredients.push_back("Tuna");
+        noNoIngredients.push_back("beef");
+        noNoIngredients.push_back("ground beef");
+        noNoIngredients.push_back("pork");
+        noNoIngredients.push_back("chicken");
+        noNoIngredients.push_back("turkey");
+        noNoIngredients.push_back("salmon");
+        noNoIngredients.push_back("tuna");
+        noNoIngredients.push_back("bacon");
+        noNoIngredients.push_back("lobster");
+        noNoIngredients.push_back("shrimp");
+        noNoIngredients.push_back("crab");
     }
     if(p1.noNos[1]){
-        noNoIngredients.push_back("Beef");
-        noNoIngredients.push_back("Pork");
-        noNoIngredients.push_back("Chicken");
-        noNoIngredients.push_back("Turkey");
-        noNoIngredients.push_back("Salmon");
-        noNoIngredients.push_back("Tuna");
-        noNoIngredients.push_back("Yoghurt");
-        noNoIngredients.push_back("Cheese");
-        noNoIngredients.push_back("Milk");
+        noNoIngredients.push_back("beef");
+        noNoIngredients.push_back("bacon");
+        noNoIngredients.push_back("pork");
+        noNoIngredients.push_back("chicken");
+        noNoIngredients.push_back("turkey");
+        noNoIngredients.push_back("salmon");
+        noNoIngredients.push_back("tuna");
+        noNoIngredients.push_back("yoghurt");
+        noNoIngredients.push_back("cheese");
+        noNoIngredients.push_back("milk");
+        noNoIngredients.push_back("lobster");
+        noNoIngredients.push_back("shrimp");
+        noNoIngredients.push_back("crab");
     }
     if(p1.noNos[2]){
-        noNoIngredients.push_back("Wine");
-        noNoIngredients.push_back("Gin");
+        noNoIngredients.push_back("wine");
+        noNoIngredients.push_back("gin");
     }
     if(p1.noNos[3]){
-        noNoIngredients.push_back("Pasta");
-        noNoIngredients.push_back("Bread");
-        noNoIngredients.push_back("Tortilla");
+        noNoIngredients.push_back("pasta");
+        noNoIngredients.push_back("bread");
+        noNoIngredients.push_back("tortilla");
     }
     if(p1.noNos[4]){
-        noNoIngredients.push_back("Cheese");
-        noNoIngredients.push_back("Milk");
-        noNoIngredients.push_back("Yoghurt");
-        noNoIngredients.push_back("Butter");
+        noNoIngredients.push_back("cheese");
+        noNoIngredients.push_back("milk");
+        noNoIngredients.push_back("yoghurt");
+        noNoIngredients.push_back("butter");
     }
     if(p1.noNos[5]){
-        noNoIngredients.push_back("Eggs");
+        noNoIngredients.push_back("eggs");
     }
     if(p1.noNos[6]){
-        noNoIngredients.push_back("Soy");
+        noNoIngredients.push_back("soy");
     }
     if(p1.noNos[7]){
-        noNoIngredients.push_back("Wheat");
+        noNoIngredients.push_back("wheat");
     }
     if(p1.noNos[8]){
-        noNoIngredients.push_back("Tuna");
-        noNoIngredients.push_back("Salmon");
-        noNoIngredients.push_back("Trout"); 
-        noNoIngredients.push_back("Cod");
-        noNoIngredients.push_back("Haddock");
-        noNoIngredients.push_back("Swordfish");
+        noNoIngredients.push_back("tuna");
+        noNoIngredients.push_back("salmon");
+        noNoIngredients.push_back("trout"); 
+        noNoIngredients.push_back("cod");
+        noNoIngredients.push_back("haddock");
+        noNoIngredients.push_back("swordfish");
     }
     if(p1.noNos[9]){
-        noNoIngredients.push_back("Lobster");
-        noNoIngredients.push_back("Shrimp");
-        noNoIngredients.push_back("Crab");
+        noNoIngredients.push_back("lobster");
+        noNoIngredients.push_back("shrimp");
+        noNoIngredients.push_back("crab");
     }
     if(p1.noNos[10]){
-        noNoIngredients.push_back("Hazelnut");
-        noNoIngredients.push_back("Walnut");
-        noNoIngredients.push_back("Chestnut");
-        noNoIngredients.push_back("Almond");
-        noNoIngredients.push_back("Cashew");
-        noNoIngredients.push_back("Macademia");
-        noNoIngredients.push_back("Pecan");
-        noNoIngredients.push_back("Pistachio");
+        noNoIngredients.push_back("hazelnut");
+        noNoIngredients.push_back("walnut");
+        noNoIngredients.push_back("chestnut");
+        noNoIngredients.push_back("almond");
+        noNoIngredients.push_back("cashew");
+        noNoIngredients.push_back("macademia");
+        noNoIngredients.push_back("pecan");
+        noNoIngredients.push_back("pistachio");
     }
     if(p1.noNos[11]){
-        noNoIngredients.push_back("Peanut");
+        noNoIngredients.push_back("peanut");
     }
 }
 bool doesNotContainNoNoIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& noNoIngredients) {
     for (const auto& ing : noNoIngredients) {
-        if (recipeIngredients.find(ing) != recipeIngredients.end()) {
+        for (const auto& recipeIng : recipeIngredients) {
+        if (recipeIng.find(ing) != string::npos) {
             return false;
+        }
         }
     }
     return true;
@@ -295,7 +306,6 @@ bool doesNotContainNoNoIngredients(const unordered_set<string>& recipeIngredient
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
-    
     profile p = loadLastProfile();
     populateNoNos(p);
     std::vector<string> searchNoNosSet(noNoIngredients.begin(), noNoIngredients.end());
@@ -313,6 +323,23 @@ void ingredient::recipefunc() {
     string line;
     std::vector<string> searchIngredientsSet(ingredients.begin(), ingredients.end());
 
+    searchIngredientsSet.erase( //remove nonos from the pantry search
+        remove_if(searchIngredientsSet.begin(), searchIngredientsSet.end(), 
+            [&searchNoNosSet](const string& ingredient) {
+                return find(searchNoNosSet.begin(), searchNoNosSet.end(), ingredient) != searchNoNosSet.end();
+            }
+        ),
+        searchIngredientsSet.end()
+    );
+
+    cout << "Remaining ingredients after removal:\n";
+    for (const auto& ingredient : searchIngredientsSet) {
+        cout << ingredient << "\n";
+    }
+    cout << "All nonos:\n";
+        for (const auto& ingredient : searchNoNosSet) {
+            cout << ingredient << "\n";
+        }
     // Skip the header
     getline(file, line);
 
@@ -335,7 +362,6 @@ void ingredient::recipefunc() {
             ingredient1 = trim(ingredient1); // Trim spaces and single quotes
             recipeIngredients.insert(ingredient1);
         }
-
         if (containsAllIngredients(recipeIngredients, searchIngredientsSet) && doesNotContainNoNoIngredients(recipeIngredients,searchNoNosSet)) {
             std::istringstream idStream(line);
             string id;
