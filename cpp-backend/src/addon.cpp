@@ -128,11 +128,18 @@ string trim(const string& str) {
 
 bool containsAllIngredients(const unordered_set<string>& recipeIngredients, const vector<string>& searchIngredients) {
     for (const auto& ing : searchIngredients) {
-        if (recipeIngredients.find(ing) == recipeIngredients.end()) {
-            return false;
+    bool found = false;
+    for (const auto& recipeIng : recipeIngredients) {
+        if (recipeIng.find(ing) != string::npos) {
+            found = true;
+            break;
         }
     }
-    return true;
+    if (!found) {
+        return false;
+    }
+}
+return true;
 }
 
 vector<string> split(const string &s, char delimiter) {
@@ -215,6 +222,7 @@ void populateNoNos(profile p1){
     noNoIngredients.clear();
     if(p1.noNos[0]){
         noNoIngredients.push_back("beef");
+        noNoIngredients.push_back("ham");
         noNoIngredients.push_back("ground beef");
         noNoIngredients.push_back("pork");
         noNoIngredients.push_back("chicken");
@@ -229,6 +237,7 @@ void populateNoNos(profile p1){
     if(p1.noNos[1]){
         noNoIngredients.push_back("beef");
         noNoIngredients.push_back("bacon");
+        noNoIngredients.push_back("ham");
         noNoIngredients.push_back("pork");
         noNoIngredients.push_back("chicken");
         noNoIngredients.push_back("turkey");
@@ -258,6 +267,7 @@ void populateNoNos(profile p1){
     }
     if(p1.noNos[5]){
         noNoIngredients.push_back("eggs");
+        noNoIngredients.push_back("egg");
     }
     if(p1.noNos[6]){
         noNoIngredients.push_back("soy");
