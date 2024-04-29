@@ -420,7 +420,7 @@ void ingredient::recipefunc() {
                     recipe_name=cleanName(recipe_name);
                     time2cook = cleanCookTime(time2cook);
                     steps=cleanSteps(steps);
-                    output << recipe_name << "~" << time2cook << "~" << steps << endl;
+                    output << recipe_name << "====" << time2cook << "====" << steps << endl;
                 }
             }
             
@@ -429,7 +429,7 @@ void ingredient::recipefunc() {
             return;
         }else if(searchIngredientsSet.empty()){
             ofstream output("recipes.txt");
-            output << "Recipe Not Found" << "~" << "N/A" << "~" << "Recipe not Found" << endl;
+            output << "Recipe Not Found" << "====" << "N/A" << "====" << "Recipe not Found" << endl;
             output.close();
             
             cout << "Recipe not found." << endl;

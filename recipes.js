@@ -39,11 +39,13 @@ function readRecipesFile(callback) {
     lines.forEach((line, index) => {
       if (line.trim() === '') return; // Skip empty lines
       
-      if (line.includes('~')) { // Check for start of a new recipe
+      if (line.includes('====')) { // Check for start of a new recipe
         if (currentRecipe) {
           recipesData.push(currentRecipe); // Push the last completed recipe
         }
-        const [name, timeToCook, steps] = line.split('~');
+        console.log(line)
+        const [name, timeToCook, steps] = line.split('====');
+        console.log(steps)
         currentRecipe = { name, timeToCook, steps: [steps.trim()] }; // Start a new recipe
       } else if (currentRecipe) {
         currentRecipe.steps.push(line.trim()); // Continue adding steps to the current recipe
