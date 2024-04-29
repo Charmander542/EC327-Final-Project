@@ -311,6 +311,9 @@ void ingredient::recipefunc() {
                 string recipe_name = columns[0];
                 string time2cook = columns[2];
                 string steps = columns[8];
+                recipe_name=cleanName(recipe_name);
+                time2cook = cleanCookTime(time2cook);
+                steps=cleanSteps(steps);
                 output << recipe_name << "~" << time2cook << "~" << steps << endl;
             }
         }
