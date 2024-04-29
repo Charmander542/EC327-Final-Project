@@ -59,7 +59,7 @@ document.getElementById('profile_submit').addEventListener('click', function() {
     console.log(restrictionsArray);
 
     // send username, birthday, and restrictions to main.js 
-    ipcRenderer.send('asynchronous-message', { 'input1': input1, '': restrictionsArray});
+    ipcRenderer.send('asynchronous-message', { 'input1': input1, 'input2': restrictionsArray});
 
     // receive message from main.js
     ipcRenderer.on('asynchronous-reply', (event, arg) => {
