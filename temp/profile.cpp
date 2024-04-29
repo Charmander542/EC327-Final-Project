@@ -49,6 +49,8 @@ profile::profile(string name, int noNo){
     
 }
 
+profile::profile(){}
+
 //This returns a pointer to the array, probably don't need it but it's here
 bool* profile::getNoNos(){
     return noNos;
@@ -196,7 +198,7 @@ Napi::Number masterWrapper(const Napi::CallbackInfo& info){
 Napi::Object Init(Napi::Env env, Napi::Object exports) 
 {
   //export Napi function
-  
+  exports.Set("masterProfile", Napi::Function::New(env, masterWrapper));
   return exports;
 }
 

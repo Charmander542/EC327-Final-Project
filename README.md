@@ -1,6 +1,7 @@
 ## Requirements
 - [Node.js](https://nodejs.org/en/download/) (>= 10.x)
 - [CMake](https://cmake.org/download/) (>= 3.15)
+- [Electron](https://www.electronjs.org/docs/latest/tutorial/installation) (lastest)
 
 ## To deploy the application
 ```bash

@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 
 // Function to update the recipes text file
 function updateRecipesFile(updatedRecipes) {
-  const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.quantity} ${recipe.importance} ${recipe.day} ${recipe.month} ${recipe.year}`).join('\n');
+  const data = 'NAME QUANTITY IMPORTANCE DAY MONTH YEAR\n' + updatedRecipes.map(recipe => `${recipe.name} ${recipe.timeToCook} ${recipe.steps}`).join('\n');
   fs.writeFile('./cpp-backend/src/recipes.txt', data, err => {
     if (err) {
       console.error('Error writing to recipes.txt:', err);
@@ -20,10 +20,9 @@ function readRecipesFile(callback) {
     const lines = data.split('\n');
     const recipesData = [];
     lines.forEach((line, index) => {
-      if (index !== 0) { // Skip the header line
-        const [name, quantity, importance, day, month, year] = line.split(' ');
-        recipesData.push({ name, quantity, importance, day, month, year });
-      }
+  // Skip the header line
+        const [name,timeToCook,steps] = line.split('~');
+        recipesData.push({ name,timeToCook,steps });
     });
     callback(recipesData);
   });
@@ -36,13 +35,10 @@ document.getElementById('data').addEventListener('click', function() {
   // receive message from main.js
   ipcRenderer.on('asynchronous-reply', (event, arg) => {
     // Address of native addon
-    const { populateRecipies } = require('./cpp-backend/build/Release/addon.node');
+    const { populateRecipes } = require('./cpp-backend/build/Release/addon.node');
 
     // Calling functions of native addon
-    var result = populateRecipies(); //TODO add a pass for the nonos
-
-    document.getElementById('tag_result').innerHTML =
-      "C++ Native addon populateRecipies() result (IPC): " + result;
+    var result = populateRecipes();
 
     // Load existing recipes after populating
     readRecipesFile(function(recipesData) {
@@ -56,10 +52,10 @@ function renderRecipes(recipesData) {
   recipesList.innerHTML = '';
   
   recipesData.forEach(recipe => {
-    const { name, quantity, importance, day, month, year } = recipe;
+    const { name,timeToCook,steps } = recipe;
 
     // Create description
-    const description = `${quantity}, Importance: ${importance}, Expiration Date: ${day}/${month}/${year}`;
+    const description = `Time to Cook: ${timeToCook}`;
 
     // Create HTML for recipe item
     const recipeItem = document.createElement('li');
@@ -75,7 +71,7 @@ function renderRecipes(recipesData) {
     button.className = 'view-instructions-button';
     button.addEventListener('click', () => {
       // Read instructions from file and open popup
-      readRecipeInstructions(name);
+      openPopup(steps);
     });
 
     // Append button to recipe item
@@ -83,22 +79,6 @@ function renderRecipes(recipesData) {
 
     recipesList.appendChild(recipeItem);
   });
-}
-
-function readRecipeInstructions(recipeName) {
-  // Assume name-of-the-recipe.txt exists in the same directory as the script
-  const fileName = `./cpp-backend/src/${recipeName}.txt`;
-
-  // Fetch the instructions from the file
-  fetch(fileName)
-    .then(response => response.text())
-    .then(data => {
-      // Open a popup with the instructions
-      openPopup(data);
-    })
-    .catch(error => {
-      console.error('Error reading recipe instructions:', error);
-    });
 }
 
 function openPopup(instructions) {
@@ -109,7 +89,7 @@ function openPopup(instructions) {
     <div class="popup-content">
       <span class="close-popup">&times;</span>
       <h2>Recipe Instructions</h2>
-      <pre>${instructions}</pre>
+      <p>${instructions}</p>
     </div>
   `;
 

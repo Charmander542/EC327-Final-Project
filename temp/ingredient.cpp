@@ -173,8 +173,8 @@ void recipes(const vector<string>& IDs) {
 void ingredient::recipefunc() {
     const int MAX_RECIPES_GENERATED=50;
     int num_recipes_generated=0;
-    profile current = loadLastProfile();
-    current.noNos;
+    profile p = loadLastProfile();
+    p.noNos;
     ifstream file("Ingredients-Only.csv");
 
     string line;
@@ -274,3 +274,4 @@ int populateRecipies() {
     ingredient::recipefunc();
     return 1;
 }
+
