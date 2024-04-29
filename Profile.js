@@ -67,7 +67,7 @@ document.getElementById('profile_submit').addEventListener('click', function() {
         const { masterProfile } = require('./cpp-backend/build/Release/addon.node');
 
         // Calling functions of native addon
-        var result = masterProfile(arg['input1'], parseInt(arg['input2']));
+        var result = masterProfile(arg['input1'], restrictionsArray);
 
         document.getElementById('tag_result').innerHTML =
             "C++ Native addon add() result (IPC): " + result;
