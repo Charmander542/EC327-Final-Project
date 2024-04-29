@@ -438,6 +438,7 @@ profile loadLastProfile(){
 
 
 int masterProfile(string name, int noNoNumber){
+    cout << "I am Alive" << endl;
     
     if(checkLoadProfile(name)){
         loadProfile(name);
