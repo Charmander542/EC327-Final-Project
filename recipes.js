@@ -60,21 +60,15 @@ function readRecipesFile(callback) {
 
 document.getElementById('data').addEventListener('click', function() {
   console.log("Hello")
-  // send username to main.js 
-  ipcRenderer.send('asynchronous-message');
+  const { populateRecipes } = require('./cpp-backend/build/Release/addon.node');
 
-  // receive message from main.js
-  ipcRenderer.on('asynchronous-reply', (event, arg) => {
-    // Address of native addon
-    const { populateRecipes } = require('./cpp-backend/build/Release/addon.node');
+  // Calling functions of native addon
+  var result = populateRecipes();
+  console.log("I Ran");
 
-    // Calling functions of native addon
-    var result = populateRecipes();
-
-    // Load existing recipes after populating
-    readRecipesFile(function(recipesData) {
-      renderRecipes(recipesData);
-    });
+  // Load existing recipes after populating
+  readRecipesFile(function(recipesData) {
+    renderRecipes(recipesData);
   });
 });
 
