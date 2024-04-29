@@ -7,7 +7,7 @@
 
 
 // Example 1 - IPC
-document.getElementById('submit').addEventListener('click', function() {
+document.getElementById('profile').addEventListener('click', function() {
    
     let input1 = document.getElementById("first_number").value;
     let input2 = document.getElementById("second_number").value;

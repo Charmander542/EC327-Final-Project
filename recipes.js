@@ -29,6 +29,7 @@ function readRecipesFile(callback) {
 }
 
 document.getElementById('data').addEventListener('click', function() {
+  console.log("Hello")
   // send username to main.js 
   ipcRenderer.send('asynchronous-message');
 
