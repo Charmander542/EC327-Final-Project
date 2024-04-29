@@ -4,4 +4,5 @@ build
 RAW_recipes.csv
 Ingredients-Only.csv
 resipes.txt
+ingredients.txt
 out/
